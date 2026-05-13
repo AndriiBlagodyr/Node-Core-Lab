@@ -1,0 +1,22 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.video {
+  width: 100%;
+  max-height: 70vh;
+  background: black;
+  border-radius: var(--radius-md);
+}
+
+.meta {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.notStreamable {
+  margin: 0;
+  color: var(--color-text-muted);
+}
