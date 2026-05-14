@@ -1,0 +1,120 @@
+.frame {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--space-4);
+  align-items: start;
+  min-height: calc(100vh - 200px);
+}
+
+@media (max-width: 880px) {
+  .frame {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebarCard {
+  position: sticky;
+  top: calc(var(--layout-header-h) + var(--space-3));
+  max-height: calc(100vh - var(--layout-header-h) - 100px);
+  overflow: auto;
+}
+
+.sidebarTitle {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text);
+}
+.row:hover {
+  background: var(--color-bg-elev-2);
+  text-decoration: none;
+}
+.rowActive {
+  background: var(--color-bg-elev-3);
+  border: 1px solid var(--color-border-strong);
+}
+
+.avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-bg-elev-3);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--fw-bold);
+}
+
+.online {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-success);
+  border: 2px solid var(--color-bg-elev-1);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
+}
+
+.preview {
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.time {
+  font-size: var(--fs-xs);
+  color: var(--color-text-subtle);
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.main {
+  min-width: 0;
+}

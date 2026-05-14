@@ -1,0 +1,21 @@
+{
+  "name": "node-core-lab",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Senior-level full stack learning monorepo: Next.js frontend, Fastify backend (you implement), shared contracts.",
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}
