@@ -1,0 +1,33 @@
+.dl {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px var(--space-4);
+  margin: 0;
+}
+
+.dl dt {
+  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  align-self: center;
+}
+
+.dl dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag {
+  background: var(--color-bg-elev-3);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  font-size: var(--fs-xs);
+}

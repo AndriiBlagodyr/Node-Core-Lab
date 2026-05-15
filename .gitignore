@@ -1,0 +1,98 @@
+# ──────────────────────────────────────────────────────────────────────
+# Dependencies
+# ──────────────────────────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+jspm_packages/
+
+# Local pnpm content-addressable store. pnpm sometimes falls back to
+# this when the global store cannot be hardlinked (e.g. cross-volume
+# or sandboxed installs). It is NOT meant to be tracked.
+.pnpm-store/
+**/.pnpm-store/
+
+# ──────────────────────────────────────────────────────────────────────
+# Build outputs
+# ──────────────────────────────────────────────────────────────────────
+.next/
+**/.next/
+out/
+**/out/
+dist/
+**/dist/
+build/
+**/build/
+*.tsbuildinfo
+**/*.tsbuildinfo
+storybook-static/
+
+# ──────────────────────────────────────────────────────────────────────
+# Tooling caches
+# ──────────────────────────────────────────────────────────────────────
+.turbo/
+**/.turbo/
+.eslintcache
+.parcel-cache/
+.cache/
+.swc/
+
+# ──────────────────────────────────────────────────────────────────────
+# Test / coverage artifacts
+# ──────────────────────────────────────────────────────────────────────
+coverage/
+**/coverage/
+.nyc_output/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ──────────────────────────────────────────────────────────────────────
+# Environment files (keep .env.example tracked)
+# ──────────────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# ──────────────────────────────────────────────────────────────────────
+# Logs & debug
+# ──────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ──────────────────────────────────────────────────────────────────────
+# Editors / OS
+# ──────────────────────────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ──────────────────────────────────────────────────────────────────────
+# Deploy targets
+# ──────────────────────────────────────────────────────────────────────
+.vercel/
+.netlify/
+
+# ──────────────────────────────────────────────────────────────────────
+# Misc temp / archives that should never end up in the repo
+# ──────────────────────────────────────────────────────────────────────
+*.tgz
+*.tar
+*.tar.gz
+*.zip
+tmp/
+temp/
