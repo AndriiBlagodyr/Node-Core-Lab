@@ -1,0 +1,102 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dropzoneLabel {
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  text-align: center;
+  background: var(--color-bg-elev-2);
+}
+.dropzoneLabel:hover {
+  background: var(--color-bg-elev-3);
+}
+
+.dropzoneIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-bg-elev-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xl);
+  color: var(--color-primary);
+}
+
+.dropzoneText {
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-md);
+}
+
+.dropzoneHint {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-3);
+}
+
+.progressView {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: var(--fw-medium);
+}
+
+.chunkInfo {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+.doneView,
+.errorView {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.doneTitle,
+.errorTitle {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+
+.doneDesc,
+.errorDesc {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.errorTitle {
+  color: var(--color-danger);
+}

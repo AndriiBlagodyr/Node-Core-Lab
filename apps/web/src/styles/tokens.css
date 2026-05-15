@@ -1,0 +1,84 @@
+/*
+ * Design tokens. Single source of truth for colors, spacing, typography, and
+ * radii. Components consume these via CSS Modules and `var(--token)` only.
+ */
+
+:root {
+  /* Surface */
+  --color-bg: #0b0d12;
+  --color-bg-elev-1: #11141b;
+  --color-bg-elev-2: #161a23;
+  --color-bg-elev-3: #1c2230;
+  --color-border: #232a3a;
+  --color-border-strong: #303a52;
+
+  /* Text */
+  --color-text: #e6e9f2;
+  --color-text-muted: #9aa3b8;
+  --color-text-subtle: #6a7387;
+
+  /* Accent */
+  --color-primary: #6c8cff;
+  --color-primary-hover: #5a7af0;
+  --color-primary-fg: #0b0d12;
+  --color-success: #3ecf8e;
+  --color-warning: #f0b429;
+  --color-danger: #ef5959;
+  --color-info: #5ab7ff;
+
+  /* Status badges */
+  --color-status-queued: #6a7387;
+  --color-status-running: #5ab7ff;
+  --color-status-completed: #3ecf8e;
+  --color-status-failed: #ef5959;
+  --color-status-cancelled: #9aa3b8;
+  --color-status-retrying: #f0b429;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    monospace;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-3xl: 36px;
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Layout */
+  --layout-sidebar-w: 240px;
+  --layout-content-max: 1200px;
+  --layout-header-h: 56px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  /* Transitions */
+  --motion-fast: 120ms ease;
+  --motion-base: 180ms ease;
+  --motion-slow: 280ms ease;
+}
