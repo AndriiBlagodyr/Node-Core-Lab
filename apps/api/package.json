@@ -1,0 +1,14 @@
+{
+  "name": "@app/api",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lab:event-loop": "tsx labs/01-event-loop.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.1",
+    "tsx": "^4.22.2",
+    "typescript": "^5.6.3"
+  }
+}
