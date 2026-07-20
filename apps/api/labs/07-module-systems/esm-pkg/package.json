@@ -1,0 +1,8 @@
+{
+  "name": "@lab/esm-pkg",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  }
+}
