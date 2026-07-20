@@ -35,7 +35,7 @@ Switch with `NEXT_PUBLIC_API_MODE=real` in `.env.local`.
 
 ```bash
 pnpm install
-pnpm dev         # http://localhost:3000
+pnpm dev         # http://localhost:7100
 pnpm typecheck
 pnpm lint
 pnpm build
