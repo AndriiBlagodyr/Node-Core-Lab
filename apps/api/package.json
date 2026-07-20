@@ -4,6 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "lab:01": "tsx labs/01-event-loop.ts",
+    "lab:02": "tsx labs/02-libuv-thread-pool.ts",
+    "lab:03": "tsx labs/03-streams.ts",
+    "lab:04": "tsx labs/04-buffers.ts",
+    "lab:05": "tsx labs/05-concurrency.ts",
+    "lab:06": "tsx labs/06-async-local-storage.ts",
+    "lab:07": "tsx labs/07-module-systems.ts",
+    "lab:08": "tsx labs/08-error-handling.ts",
+    "lab:09": "tsx labs/09-networking.ts",
+    "lab:10": "tsx labs/10-crypto.ts",
+    "lab:11": "tsx labs/11-profiling.ts",
+    "lab:12": "tsx labs/12-process-os.ts",
     "lab:event-loop": "tsx labs/01-event-loop.ts"
   },
   "devDependencies": {

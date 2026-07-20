@@ -14,5 +14,5 @@ function parseMode(raw: string | undefined): ApiMode {
 
 export const env = {
   apiMode: parseMode(process.env.NEXT_PUBLIC_API_MODE),
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000",
+  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8100",
 };

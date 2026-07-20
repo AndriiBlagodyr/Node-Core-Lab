@@ -14,17 +14,17 @@ Build deep, hands-on understanding of the Node.js runtime itself before touching
 
 ### Tasks
 
-- [ ] Diagram the event loop phases: timers, pending callbacks, idle/prepare, poll, check, close.
-- [ ] Lab: print the order of `setTimeout(fn, 0)`, `setImmediate`, `process.nextTick`, `Promise.resolve().then`, and a sync log.
-- [ ] Lab: trigger phase-skip behavior with `setImmediate` inside an I/O callback vs inside the main module.
-- [ ] Lab: starve the event loop with a long sync loop and observe delayed timers.
-- [ ] Lab: starve the microtask queue with infinite `process.nextTick` and observe a hung process.
+- [X] Diagram the event loop phases: timers, pending callbacks, idle/prepare, poll, check, close.
+- [X] Lab: print the order of `setTimeout(fn, 0)`, `setImmediate`, `process.nextTick`, `Promise.resolve().then`, and a sync log.
+- [X] Lab: trigger phase-skip behavior with `setImmediate` inside an I/O callback vs inside the main module.
+- [X] Lab: starve the event loop with a long sync loop and observe delayed timers.
+- [X] Lab: starve the microtask queue with infinite `process.nextTick` and observe a hung process.
 
 ### Learning Outcomes
 
-- [ ] Explain the difference between microtasks and macrotasks in Node.
-- [ ] Explain why `setImmediate` and `setTimeout(fn, 0)` can fire in different orders depending on context.
-- [ ] Explain when `process.nextTick` is dangerous.
+- [X] Explain the difference between microtasks and macrotasks in Node.
+- [X] Explain why `setImmediate` and `setTimeout(fn, 0)` can fire in different orders depending on context.
+- [X] Explain when `process.nextTick` is dangerous.
 
 ## 2. libuv & Thread Pool
 

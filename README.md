@@ -19,19 +19,100 @@ docs/
   adr/                Architecture Decision Records
 ```
 
-## Quickstart
+## Prerequisites
 
-Requires Node.js 20.11+ and pnpm 9.
+- Node.js **20.11+**
+- pnpm **9+** (`corepack enable` if needed)
+
+## Install dependencies
+
+From the repository root:
 
 ```bash
 pnpm install
+```
+
+This installs all workspace packages: `apps/web`, `apps/api`, `packages/types`, and `packages/config`.
+
+## Environment setup
+
+### Frontend (`apps/web`)
+
+```bash
 cp apps/web/.env.example apps/web/.env.local
+```
+
+Default values in `apps/web/.env.local`:
+
+```env
+NEXT_PUBLIC_API_MODE=mock
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8100
+```
+
+### Backend (`apps/api`)
+
+The Fastify server is not implemented yet. When you bootstrap it, copy:
+
+```bash
+cp apps/api/.env.example apps/api/.env
+```
+
+Default values in `apps/api/.env`:
+
+```env
+PORT=8100
+HOST=127.0.0.1
+```
+
+## Development commands
+
+### Start frontend only (works today)
+
+```bash
+pnpm --filter @app/web dev
+```
+
+Open **http://localhost:7100**.
+
+The app runs in **mock mode** by default — all five modules work without a backend.
+
+### Start backend only (after you implement Fastify)
+
+Once `apps/api` has a `dev` script (Backend Roadmap → Foundation):
+
+```bash
+pnpm --filter @app/api dev
+```
+
+API will listen on **http://localhost:8100**.
+
+### Start frontend + backend together
+
+Root command:
+
+```bash
 pnpm dev
 ```
 
-Then open http://localhost:3000.
+This runs `turbo run dev` across the monorepo. **Today** only `@app/web` has a `dev` script, so Turbo starts the frontend. When you add `"dev"` to `apps/api/package.json`, the same command will start both apps in parallel.
 
-The overview page lists every module with the URL of the matching contract. The default `NEXT_PUBLIC_API_MODE=mock` keeps the frontend usable end-to-end without any backend.
+### Node.js fundamentals labs (backend learning track — start here)
+
+```bash
+# Run a specific experiment (1–4)
+pnpm --filter @app/api exec tsx labs/01-event-loop.ts 1
+
+# Or from repo root with npx
+npx tsx apps/api/labs/01-event-loop.ts 1
+```
+
+## Ports
+
+| Service | Default port | Config |
+| --- | --- | --- |
+| Frontend (Next.js) | `7100` | `apps/web/package.json` → `dev` script |
+| Backend (Fastify) | `8100` | `apps/api/.env` → `PORT` |
+| Frontend → API URL | `8100` | `apps/web/.env.local` → `NEXT_PUBLIC_API_BASE_URL` |
 
 ## Mock vs real mode
 
@@ -41,14 +122,14 @@ The whole frontend talks to a single set of API adapters at `apps/web/src/lib/ap
 export const authApi: AuthApi = env.apiMode === "mock" ? mockAuth : realAuth;
 ```
 
-Switch with `apps/web/.env.local`:
+To point the UI at your real Fastify backend, update `apps/web/.env.local`:
 
 ```env
 NEXT_PUBLIC_API_MODE=real
-NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8100
 ```
 
-The `real*` adapters call the URLs documented in each contract. Implement those routes in `apps/api` and the same pages start hitting your service.
+Restart the frontend after changing env vars. The `real*` adapters call the URLs documented in each contract. Implement those routes in `apps/api` and the same pages start hitting your service.
 
 ## Module map
 
@@ -72,10 +153,14 @@ The `real*` adapters call the URLs documented in each contract. Implement those 
 ## Repository commands
 
 ```bash
-pnpm dev               # turbo run dev (starts apps/web)
+pnpm install           # install all workspace dependencies
+pnpm dev               # turbo run dev (FE today; FE + BE when api has dev script)
+pnpm --filter @app/web dev    # frontend only → http://localhost:7100
+pnpm --filter @app/api dev    # backend only (after Fastify foundation)
 pnpm build             # turbo run build
 pnpm typecheck         # turbo run typecheck (web + types)
 pnpm lint              # turbo run lint
+pnpm clean             # clean build artifacts and node_modules
 ```
 
 ## Roadmaps
