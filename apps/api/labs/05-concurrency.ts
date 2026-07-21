@@ -1,7 +1,7 @@
 /**
  * Lab 05 — Concurrency Primitives
  *
- * Run:  npx tsx apps/api/labs/05-concurrency.ts <number>
+ * Run:  pnpm --filter @app/api lab:05 <number>
  *
  * Experiment 4 (cluster) and 5 (spawn) spawn child processes — read output carefully.
  */
@@ -146,7 +146,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/05-concurrency.ts <number>
+Usage:  pnpm --filter @app/api lab:05 <number>
 
   1  Worker Thread + MessagePort
   2  SharedArrayBuffer + Atomics

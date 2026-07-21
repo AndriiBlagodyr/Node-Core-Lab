@@ -1,7 +1,7 @@
 /**
  * Lab 09 — Networking Primitives
  *
- * Run:  npx tsx apps/api/labs/09-networking.ts <number>
+ * Run:  pnpm --filter @app/api lab:09 <number>
  */
 
 import { createServer as createTcpServer } from "node:net";
@@ -106,7 +106,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/09-networking.ts <number>
+Usage:  pnpm --filter @app/api lab:09 <number>
 
   1  TCP echo server
   2  Minimal HTTP/1.1 server

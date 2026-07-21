@@ -1,7 +1,7 @@
 /**
  * Lab 04 — Buffers & Binary Data
  *
- * Run:  npx tsx apps/api/labs/04-buffers.ts <number>
+ * Run:  pnpm --filter @app/api lab:04 <number>
  */
 
 import { createHash } from "node:crypto";
@@ -80,7 +80,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/04-buffers.ts <number>
+Usage:  pnpm --filter @app/api lab:04 <number>
 
   1  Little-endian vs big-endian integers
   2  Read magic bytes from this file

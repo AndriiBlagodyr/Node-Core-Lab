@@ -1,7 +1,7 @@
 /**
  * Lab 08 — Error Handling
  *
- * Run:  npx tsx apps/api/labs/08-error-handling.ts <number>
+ * Run:  pnpm --filter @app/api lab:08 <number>
  *
  * Experiment 2 triggers uncaughtException — process may exit unless handled.
  */
@@ -109,7 +109,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/08-error-handling.ts <number>
+Usage:  pnpm --filter @app/api lab:08 <number>
 
   1  unhandledRejection handler
   2  uncaughtException handler
