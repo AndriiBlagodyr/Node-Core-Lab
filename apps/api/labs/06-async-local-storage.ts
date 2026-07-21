@@ -1,7 +1,7 @@
 /**
  * Lab 06 — AsyncLocalStorage & async_hooks
  *
- * Run:  npx tsx apps/api/labs/06-async-local-storage.ts <number>
+ * Run:  pnpm --filter @app/api lab:06 <number>
  */
 
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -89,7 +89,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/06-async-local-storage.ts <number>
+Usage:  pnpm --filter @app/api lab:06 <number>
 
   1  Request-scoped logger with AsyncLocalStorage
   2  Trace async parent/child with async_hooks

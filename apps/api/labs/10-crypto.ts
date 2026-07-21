@@ -1,7 +1,7 @@
 /**
  * Lab 10 — Crypto
  *
- * Run:  npx tsx apps/api/labs/10-crypto.ts <number>
+ * Run:  pnpm --filter @app/api lab:10 <number>
  */
 
 import {
@@ -97,7 +97,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/10-crypto.ts <number>
+Usage:  pnpm --filter @app/api lab:10 <number>
 
   1  scrypt password hash (compare with argon2/bcrypt later)
   2  RSA sign/verify without JWT library
