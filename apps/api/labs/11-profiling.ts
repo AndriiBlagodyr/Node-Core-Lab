@@ -1,7 +1,7 @@
 /**
  * Lab 11 — Performance & Profiling
  *
- * Run:  npx tsx apps/api/labs/11-profiling.ts <number>
+ * Run:  pnpm --filter @app/api lab:11 <number>
  *
  * Experiments 1–4 and 6 are manual/tooling labs — this file prints steps + runnable demos.
  */
@@ -120,7 +120,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/11-profiling.ts <number>
+Usage:  pnpm --filter @app/api lab:11 <number>
 
   1  CPU profile (--inspect) instructions
   2  Heap snapshot instructions

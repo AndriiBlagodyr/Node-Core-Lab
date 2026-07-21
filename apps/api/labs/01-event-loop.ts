@@ -1,34 +1,40 @@
 /**
  * Lab 01 — Event Loop & Timers
  *
- * Run:  npx tsx apps/api/labs/01-event-loop.ts
+ * Run:  pnpm --filter @app/api lab:01
  *
  * Before running each experiment, write down what you EXPECT the output
  * order to be. Then run it and compare. Update the "What actually happened"
  * and "Why" sections after each run.
  */
 
+import { readFile } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+
 // ─── Experiment 1 ────────────────────────────────────────────────────────────
 // Print the order of setTimeout, setImmediate, process.nextTick,
 // Promise.resolve().then, and a sync log.
 //
 // What I expected:
+// sync log first, then microtasks (nextTick, then Promise), then macrotasks
+// (setTimeout vs setImmediate order may vary in the main module).
 
-// console.log("\n=== Experiment 1: Execution order ===\n"); - sync operation
-// console.log("5. sync log"); - sync operation
-// process.nextTick(() => console.log("3. process.nextTick")); - VIP Process priority
-//  Promise.resolve().then(() => console.log("4. Promise.resolve().then")); - Microtask order
-// setTimeout(() => console.log("1. setTimeout(fn, 0)"), 0); AND setImmediate(() => console.log("2. setImmediate")); Or via verse depending on the processor speed
-
-// What actually happened:
-
-// . sync log
+// What actually happened (Node v24 + tsx):
+// 5. sync log
 // 4. Promise.resolve().then
 // 3. process.nextTick
 // 2. setImmediate
 // 1. setTimeout(fn, 0)
+
 // Why:
-// nextTick should be before Promise but it depends on the running environment. In this case, the Promise resolved before the nextTick callback was executed. The order of setTimeout and setImmediate can vary depending on the environment and timing, but in this run, setImmediate executed before setTimeout.
+// All synchronous code runs first (5). Microtasks run before any timer/check
+// phase. Promise ran before nextTick in this ESM/tsx run; in a minimal CJS
+// script, nextTick often runs before Promise — compare both if curious.
+// setImmediate before setTimeout here is normal in the main module: neither
+// is inside an I/O callback, so phase ordering can differ by runtime and loop
+// iteration. The stable rule: microtasks always finish before macrotasks.
 
 function experiment1() {
   console.log("\n=== Experiment 1: Execution order ===\n");
@@ -51,32 +57,23 @@ function experiment1() {
 // non-deterministic. Inside an I/O callback, setImmediate always fires first.
 //
 // What I expected:
-
-// console.log("\n=== Experiment 2: I/O callback context ===\n"); - sync operation
-// console.log("--- From main module (order may vary between runs) ---"); - sync operation
-// setTimeout(() => console.log("  main: setTimeout"), 0); - Timer phase
-// setImmediate(() => console.log("  main: setImmediate")); - Check phase
-// readFile Poll phase
-// Inside Poll: console.log("\n--- Inside I/O callback (setImmediate always first) ---"); - sync operation
-// Inside Poll: setImmediate(() => console.log("  io: setImmediate")); Check after Poll
-// Inside Poll: setTimeout(() => console.log("  io: setTimeout"), 0);
-
+// Main module: setTimeout(0) vs setImmediate order may vary between runs.
+// Inside readFile I/O callback: setImmediate always before setTimeout(0).
 
 // What actually happened:
-// --- From main module (order may vary between runs) ---
+// Main module:
 //   main: setImmediate
 //   main: setTimeout
-
-// --- Inside I/O callback (setImmediate always first) ---
+// Inside I/O callback:
 //   io: setImmediate
 //   io: setTimeout
 
 // Why:
-
-import { readFile } from "node:fs";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
+// Outside I/O, the event loop may not have entered the poll phase yet, so
+// setTimeout(0) and setImmediate can race — order is not guaranteed.
+// Inside the readFile callback, the poll phase just finished I/O, so the check
+// phase runs next: setImmediate fires before the timers phase re-processes
+// setTimeout(0). This is the canonical "phase skip" behavior the lab targets.
 
 function experiment2() {
   console.log("\n=== Experiment 2: I/O callback context ===\n");
@@ -96,19 +93,18 @@ function experiment2() {
 // Starve the event loop with a long sync loop and observe delayed timers.
 //
 // What I expected:
+// setTimeout(100ms) would log ~100ms, but the 2s sync loop would delay it.
+
 // What actually happened:
+// Sync loop blocked ~2000ms. setTimeout(100ms) fired at ~2000ms (not ~100ms).
+// Timer callback ran only after the sync while-loop released the main thread.
 
-// console.log("\n=== Experiment 3: Starving the event loop ===\n"); - sync operation
-// setTimeout is added to the timer queue and will fire after 100ms, but the sync loop will block the event loop for ~2 seconds, so the timer callback will be delayed until after the sync loop completes.
-// console.log("  Blocking the main thread for ~2 seconds..."); - sync operation
-// while (Date.now() - start < BLOCK_MS) { /* busy wait — nothing can run */ } - sync operation
-// console.log(`  Sync loop done at: ${Date.now() - start}ms`); - sync operation
-// console.log("  The timer callback above will fire AFTER this, delayed by the sync block."); - sync operation
-// console.log(`  setTimeout(100ms) fired at: ${Date.now() - start}ms (expected ~100ms)`); After 2 seconds and 100ms, the setTimeout callback will finally fire, but it will be delayed by the sync block, so it will log a time of ~2000ms instead of the expected ~100ms.
-
-
-// Why: At first the sync code is running. while  sync loop blocks main thread for 2 seconds
-// So setTimeout will be executed after the sync loop is done, which is why it logs a time of ~2000ms instead of the expected ~100ms.
+// Why:
+// Timers are macrotasks — their callbacks run only when the event loop gets a
+// turn. A long synchronous while-loop on the main thread prevents the loop from
+// processing timers, I/O, or other callbacks. The 100ms deadline elapsed during
+// the block, but the callback could not run until sync work finished (~2000ms).
+// This is why CPU-heavy sync work hurts server latency.
 
 function experiment3() {
   console.log("\n=== Experiment 3: Starving the event loop ===\n");
@@ -135,14 +131,19 @@ function experiment3() {
 // WARNING: this will hang the process. Kill it with Ctrl+C after observing.
 //
 // What I expected:
+// nextTick count logs every 500k iterations; setTimeout(0) never fires.
 
-// console.log("\n=== Experiment 4: Microtask starvation (will hang — Ctrl+C to stop) ===\n"); - sync operation
-// every 500 000 tick message  : console.log(`  nextTick count: ${count.toLocaleString()}`);
-
-// console.log("  This setTimeout will NEVER fire because nextTick starves the queue."); - never be called
 // What actually happened:
-// Why: setTimeout will never be executed because process.nextTick keeps adding new callbacks to the microtask queue, preventing the event loop from moving on to the timer phase where setTimeout would be executed.
-// 
+// nextTick count increases indefinitely. setTimeout callback never logged.
+// Process hangs until Ctrl+C.
+
+// Why:
+// process.nextTick schedules work on the nextTick queue, which Node drains
+// completely before moving to the next event-loop phase. Recursive nextTick
+// refills that queue forever, so the loop never reaches the timers phase where
+// setTimeout would run. Same risk in production: excessive nextTick starves I/O
+// and timers. Prefer setImmediate for deferral when you do not need pre-microtask
+// priority.
 
 function experiment4() {
   console.log("\n=== Experiment 4: Microtask starvation (will hang — Ctrl+C to stop) ===\n");
@@ -177,7 +178,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/01-event-loop.ts <number>
+Usage:  pnpm --filter @app/api lab:01 <number>
 
   1  Execution order (setTimeout, setImmediate, nextTick, Promise, sync)
   2  setImmediate inside I/O callback vs main module
@@ -188,3 +189,12 @@ Usage:  npx tsx apps/api/labs/01-event-loop.ts <number>
 }
 
 experiments[arg]();
+
+// ─── Learning outcomes (Lab 01) ─────────────────────────────────────────────
+// Microtasks: process.nextTick queue + Promise reactions — run after current
+// sync code, before the next macrotask phase.
+// Macrotasks: setTimeout/setInterval (timers phase), setImmediate (check phase),
+// I/O callbacks (poll phase).
+// setImmediate vs setTimeout(0): order depends on context; after I/O, setImmediate
+// wins. process.nextTick is dangerous when recursive — starves the event loop.
+

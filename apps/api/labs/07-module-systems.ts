@@ -1,7 +1,7 @@
 /**
  * Lab 07 — Module Systems
  *
- * Run:  npx tsx apps/api/labs/07-module-systems.ts <number>
+ * Run:  pnpm --filter @app/api lab:07 <number>
  *
  * Supporting files live in labs/07-module-systems/
  */
@@ -84,7 +84,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/07-module-systems.ts <number>
+Usage:  pnpm --filter @app/api lab:07 <number>
 
   1  Import CommonJS from ESM (createRequire)
   2  ESM package with exports field

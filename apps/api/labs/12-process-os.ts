@@ -1,7 +1,7 @@
 /**
  * Lab 12 — Process & OS
  *
- * Run:  npx tsx apps/api/labs/12-process-os.ts <number>
+ * Run:  pnpm --filter @app/api lab:12 <number>
  *
  * Experiment 2 registers signal handlers. Experiment 3 starts a server — Ctrl+C to test shutdown.
  */
@@ -102,7 +102,7 @@ const arg = process.argv[2];
 
 if (!arg || !experiments[arg]) {
   console.log(`
-Usage:  npx tsx apps/api/labs/12-process-os.ts <number>
+Usage:  pnpm --filter @app/api lab:12 <number>
 
   1  os + process info
   2  SIGINT / SIGTERM / SIGHUP handlers
