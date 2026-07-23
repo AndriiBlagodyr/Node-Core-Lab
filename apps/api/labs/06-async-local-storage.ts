@@ -11,8 +11,21 @@ const store = new AsyncLocalStorage<{ requestId: string }>();
 
 // ─── Experiment 1 — request-scoped logger ───────────────────────────────────
 // What I expected:
+// AsyncLocalStorage would preserve the requestId across asynchronous
+// operations, so every log inside the request would print the same requestId.
+//
 // What actually happened:
+// All log messages, including those inside fakeDbQuery() after an await,
+// printed "req-abc" as the requestId.
+// [req-abc] handler start
+// [req-abc] db query finished
+// [req-abc] handler end
+//
 // Why:
+// AsyncLocalStorage creates an asynchronous context with store.run().
+// Every async operation (Promises, async/await, timers, etc.) created within
+// that context automatically inherits the same store, allowing request-scoped
+// data to be accessed anywhere with getStore().
 
 function log(message: string): void {
   const ctx = store.getStore();
@@ -36,8 +49,19 @@ async function experiment1(): Promise<void> {
 
 // ─── Experiment 2 — async_hooks trace ───────────────────────────────────────
 // What I expected:
+// async_hooks would record relationships between asynchronous resources,
+// showing that every resource has a parent (triggerAsyncId).
+//
 // What actually happened:
+// The hook collected several asyncId → triggerAsyncId pairs, demonstrating
+// how Node.js links asynchronous resources together.
+// async ids sampled: [ [ 24, 0 ], [ 25, 0 ], [ 26, 24 ], [ 28, 27 ], [ 30, 29 ] ]
+//
 // Why:
+// Every asynchronous operation in Node.js receives a unique asyncId.
+// triggerAsyncId identifies the resource that created it, allowing Node.js
+// to build a parent-child chain of async resources. AsyncLocalStorage relies
+// on this mechanism to propagate context.
 
 async function experiment2(): Promise<void> {
   console.log("\n=== Experiment 2: async_hooks parent/child ===\n");
@@ -61,8 +85,21 @@ async function experiment2(): Promise<void> {
 
 // ─── Experiment 3 — context survives await + setTimeout ───────────────────
 // What I expected:
+// The AsyncLocalStorage context would remain available after both await and
+// setTimeout, so every log would use the same requestId.
+//
 // What actually happened:
+// All log messages printed "req-xyz", including those executed after
+// Promise.resolve() and inside setTimeout().
+// [req-xyz] before await
+// [req-xyz] after await
+// [req-xyz] inside setTimeout
+//
 // Why:
+// Both Promise-based async/await and timer callbacks create asynchronous
+// resources that inherit the current AsyncLocalStorage context. Node.js
+// propagates the store automatically using async_hooks, so the context
+// remains available throughout the entire asynchronous execution chain.
 
 async function experiment3(): Promise<void> {
   console.log("\n=== Experiment 3: context survives async chain ===\n");
