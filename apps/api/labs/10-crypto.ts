@@ -18,8 +18,24 @@ import { fileURLToPath } from "node:url";
 
 // ─── Experiment 1 — password hashing (scrypt; compare with argon2/bcrypt) ───
 // What I expected:
+// The same password would be transformed into a secure hash using a random
+// salt, producing a different hash each time while remaining suitable for
+// password verification.
+
 // What actually happened:
+// A random salt was generated, and scrypt produced a 64-byte hash. Running
+// the experiment again generated a different salt and therefore a different
+// hash, even though the password was unchanged.
+
+// salt: 4c1dd02af15cc001...
+// hash: ca56a7b52522201d...
+// Roadmap also mentions argon2/bcrypt — try npm packages later.
+
 // Why:
+// Scrypt combines the password with a random salt and performs a
+// computationally and memory-intensive key derivation. The random salt
+// prevents identical passwords from producing identical hashes, while the
+// algorithm's cost slows brute-force attacks.
 
 function experiment1(): void {
   console.log("\n=== Experiment 1: scrypt password hash ===\n");
@@ -33,8 +49,18 @@ function experiment1(): void {
 
 // ─── Experiment 2 — sign/verify without jwt library ─────────────────────────
 // What I expected:
+// A message signed with the private RSA key would successfully verify using
+// the corresponding public key.
+
 // What actually happened:
+// The payload was signed with createSign(), and createVerify() confirmed
+// that the signature was valid when verified with the matching public key.
+// valid: true
+
 // Why:
+// RSA digital signatures use asymmetric cryptography. Only the private key
+// can generate a valid signature, while anyone with the corresponding
+// public key can verify the authenticity and integrity of the message.
 
 function experiment2(): void {
   console.log("\n=== Experiment 2: createSign / createVerify ===\n");
@@ -53,8 +79,23 @@ function experiment2(): void {
 
 // ─── Experiment 3 — key rotation sketch ───────────────────────────────────────
 // What I expected:
+// Multiple encryption keys would represent different key versions, allowing
+// applications to encrypt new data with the latest key while still
+// decrypting older data using previous keys.
+
 // What actually happened:
+// Two random 256-bit symmetric keys were generated to simulate different
+// key versions. The example prints abbreviated key values and notes that a
+// key identifier should be stored with encrypted data.
+
+// key v1: 839d32d6af5b...
+// key v2: 3c9f031bac59...
+// Decrypt with key id stored alongside ciphertext in real apps.
+
 // Why:
+// Key rotation limits the impact of a compromised key and supports periodic
+// replacement. Storing a key ID with the ciphertext allows applications to
+// select the correct key for decryption after new keys have been introduced.
 
 function experiment3(): void {
   console.log("\n=== Experiment 3: symmetric key rotation ===\n");
@@ -66,8 +107,22 @@ function experiment3(): void {
 
 // ─── Experiment 4 — AES-256-GCM file encrypt/decrypt ──────────────────────────
 // What I expected:
+// The file content would be encrypted using AES-256-GCM and successfully
+// decrypted back to its original form using the same key, IV, and
+// authentication tag.
+
 // What actually happened:
+// The plaintext was encrypted, an authentication tag was generated, and the
+// decrypted output matched the original input, resulting in a successful
+// round-trip.
+
+// round-trip ok: true
+
 // Why:
+// AES-256-GCM provides authenticated encryption. Besides encrypting the
+// data, it generates an authentication tag that verifies integrity during
+// decryption. If the ciphertext, key, IV, or tag were modified, decryption
+// would fail.
 
 function experiment4(): void {
   console.log("\n=== Experiment 4: AES-256-GCM ===\n");
