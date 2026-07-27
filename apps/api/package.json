@@ -15,6 +15,8 @@
     "lab:09": "tsx labs/09-networking.ts",
     "lab:10": "tsx labs/10-crypto.ts",
     "lab:11": "tsx labs/11-profiling.ts",
+    "lab:11:inspect": "NODE_OPTIONS='--inspect' tsx labs/11-profiling.ts",
+    "lab:11:inspect-brk": "NODE_OPTIONS='--inspect-brk' tsx labs/11-profiling.ts",
     "lab:12": "tsx labs/12-process-os.ts",
     "lab:event-loop": "tsx labs/01-event-loop.ts"
   },
