@@ -117,7 +117,7 @@ Copy this checklist into the tracking note for every product module (Auth, Searc
 | # | Milestone | Files |
 | - | --------- | ----- |
 | 0 | Node.js Fundamentals Lab | [node-fundamentals-roadmap](./node-fundamentals-roadmap.md) |
-| 1 | Monorepo Foundation | [backend](./backend-roadmap.md#foundation), [frontend](./frontend-roadmap.md#foundation-tasks) |
+| 1 | Monorepo Foundation | [foundation map](./foundation.md), [backend](./backend-roadmap.md#foundation), [frontend](./frontend-roadmap.md#foundation-tasks) |
 | 2 | Architecture & API Design | [architecture](./architecture-roadmap.md) |
 | 3 | Auth & Security | [backend](./backend-roadmap.md#module-1-auth--security), [frontend](./frontend-roadmap.md#module-1-auth--security) |
 | 4 | Database Performance & Search | [backend](./backend-roadmap.md#module-2-database-performance--search), [frontend](./frontend-roadmap.md#module-2-high-performance-search) |

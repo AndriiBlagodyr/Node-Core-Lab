@@ -51,18 +51,14 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8100
 
 ### Backend (`apps/api`)
 
-The Fastify server is not implemented yet. When you bootstrap it, copy:
+Foundation stubs live under `apps/api/src/` — see [docs/foundation.md](docs/foundation.md).
 
 ```bash
 cp apps/api/.env.example apps/api/.env
+docker compose up -d   # Postgres, Redis, MailHog
 ```
 
-Default values in `apps/api/.env`:
-
-```env
-PORT=8100
-HOST=127.0.0.1
-```
+Defaults in `apps/api/.env.example`: `HOST`, `PORT`, `DATABASE_URL`, `REDIS_URL`, `SMTP_URL` (documented in [docs/env.md](docs/env.md)).
 
 ## Development commands
 
@@ -76,15 +72,13 @@ Open **http://localhost:7100**.
 
 The app runs in **mock mode** by default — all five modules work without a backend.
 
-### Start backend only (after you implement Fastify)
-
-Once `apps/api` has a `dev` script (Backend Roadmap → Foundation):
+### Start backend only (after Foundation stubs are filled)
 
 ```bash
 pnpm --filter @app/api dev
 ```
 
-API will listen on **http://localhost:8100**.
+API will listen on **http://localhost:8100** once `src/server.ts` / `src/app.ts` are implemented.
 
 ### Start frontend + backend together
 
@@ -167,6 +161,7 @@ pnpm clean             # clean build artifacts and node_modules
 
 - [Project Roadmap](docs/project-roadmap.md)
 - [Node.js Fundamentals Roadmap](docs/node-fundamentals-roadmap.md) — start here
+- [Foundation map](docs/foundation.md) — Monorepo / Fastify bootstrap (current backend milestone)
 - [Architecture Roadmap](docs/architecture-roadmap.md)
 - [Backend Roadmap](docs/backend-roadmap.md)
 - [Frontend Roadmap](docs/frontend-roadmap.md)

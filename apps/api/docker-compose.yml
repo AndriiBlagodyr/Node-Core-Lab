@@ -1,0 +1,47 @@
+# Prefer running from repo root: `docker compose up -d`
+# This copy keeps the same services available under apps/api/.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: node-core-lab-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: node_core
+      POSTGRES_PASSWORD: node_core
+      POSTGRES_DB: node_core_lab
+    volumes:
+      - node_core_lab_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U node_core -d node_core_lab"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: node-core-lab-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - node_core_lab_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: node-core-lab-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  node_core_lab_pg:
+  node_core_lab_redis:

@@ -1,8 +1,32 @@
-# `apps/api` (placeholder)
+# `apps/api`
 
-This folder is the home of the Fastify backend you'll build module by module per the [Backend Roadmap](../../docs/backend-roadmap.md).
+Fastify backend learning track. Fundamentals labs live under `labs/`. Foundation stubs live under `src/` — fill them in per [docs/foundation.md](../../docs/foundation.md) and [Backend Roadmap → Foundation](../../docs/backend-roadmap.md#foundation).
 
-The frontend at [`apps/web`](../web) is already implemented and runs against in-process mock adapters by default. When you ship a real route, set `NEXT_PUBLIC_API_MODE=real` in `apps/web/.env.local` to wire the matching adapter.
+The frontend at [`apps/web`](../web) runs against mocks by default. When real routes exist, set `NEXT_PUBLIC_API_MODE=real` in `apps/web/.env.local`.
+
+## Foundation (current milestone)
+
+| Area | Path |
+| --- | --- |
+| Entry / app factory | `src/server.ts`, `src/app.ts` |
+| Env (Zod) | `src/config/env.ts` |
+| Domain errors | `src/domain/errors.ts` |
+| Request context (ALS) | `src/lib/request-context.ts` |
+| Plugins | `src/plugins/` |
+| Health routes | `src/routes/health.ts` |
+| DB / Redis / Mail | `src/infrastructure/` |
+| CLI | `src/cli/index.ts` |
+| Compose | `docker-compose.yml` (also at repo root) |
+| Env docs | [docs/env.md](../../docs/env.md) |
+
+```bash
+cp apps/api/.env.example apps/api/.env
+docker compose up -d                    # from repo root
+pnpm --filter @app/api dev              # throws until stubs are filled
+pnpm --filter @app/api cli help
+```
+
+Implementation map and fill-in order: **[docs/foundation.md](../../docs/foundation.md)**.
 
 ## Fundamentals labs
 
@@ -25,14 +49,8 @@ Each script matches a section in [Node.js Fundamentals Roadmap](../../docs/node-
 
 Example: `pnpm --filter @app/api lab:06 1`
 
-Lab 07 includes supporting files under `labs/07-module-systems/`.
-
 ## Suggested order
 
-1. Start with the [Node.js Fundamentals labs](../../docs/node-fundamentals-roadmap.md) under `apps/api/labs/`. Each lab is a standalone script.
-2. Bootstrap the Fastify app foundation per [Backend Roadmap → Foundation](../../docs/backend-roadmap.md#foundation).
-3. Pick a module from [Frontend Roadmap](../../docs/frontend-roadmap.md), open the matching mock adapter at `apps/web/src/lib/api/<module>.ts`, and replicate the URLs / request shapes.
-
-## Why does this folder exist already?
-
-So `apps/api/labs/` is in version control from day one and the Fundamentals roadmap can be started without restructuring the workspace.
+1. ~~Fundamentals labs~~ under `labs/`.
+2. **Foundation** — fill stubs in `src/` ([docs/foundation.md](../../docs/foundation.md)).
+3. Architecture patterns + Auth module ([backend-roadmap](../../docs/backend-roadmap.md)).

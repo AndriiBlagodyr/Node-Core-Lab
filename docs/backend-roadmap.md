@@ -32,6 +32,8 @@ These two files are referenced from every module below.
 
 ## Foundation
 
+Scaffold and file map: [docs/foundation.md](./foundation.md). Stubs live under `apps/api/src/`.
+
 ### Tasks
 
 - [ ] Create Fastify app with TypeScript and strict ESLint.

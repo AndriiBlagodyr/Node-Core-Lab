@@ -5,7 +5,12 @@
     "moduleResolution": "NodeNext",
     "types": ["node"],
     "noEmit": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["labs/**/*.ts"]
+  "include": ["src/**/*.ts", "drizzle.config.ts"],
+  "exclude": ["labs/**", "dist/**", "node_modules/**"]
 }
