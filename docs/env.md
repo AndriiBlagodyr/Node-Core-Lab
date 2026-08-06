@@ -2,17 +2,21 @@
 
 Document every variable the API reads. Keep in sync with `apps/api/.env.example` and `apps/api/src/config/env.ts`.
 
+`loadEnv()` in `apps/api/src/config/env.ts` validates with Zod and fails fast before the server binds a port or opens connections. Copy `.env.example` → `.env` for local work.
+
 ## `apps/api`
 
-| Variable | Required | Default | Description |
+| Variable | Required | Default (Zod) | Description |
 | --- | --- | --- | --- |
-| `NODE_ENV` | yes | — | `development` \| `test` \| `production` |
-| `HOST` | yes | `127.0.0.1` | Bind address for Fastify |
-| `PORT` | yes | `8100` | HTTP port |
-| `LOG_LEVEL` | yes | `info` | Pino log level |
+| `NODE_ENV` | no* | `development` | `development` \| `test` \| `production` |
+| `HOST` | no* | `127.0.0.1` | Bind address for Fastify |
+| `PORT` | no* | `8100` | HTTP port (positive integer) |
+| `LOG_LEVEL` | no* | `info` | Pino level: `fatal` \| `error` \| `warn` \| `info` \| `debug` \| `trace` \| `silent` |
 | `DATABASE_URL` | yes | — | PostgreSQL connection string |
 | `REDIS_URL` | yes | — | Redis connection string |
 | `SMTP_URL` | yes | — | SMTP URL (MailHog in local Compose) |
+
+\* Defaults apply when the variable is unset. Values in `.env.example` match these defaults for local Compose.
 
 ## Local Compose ports
 

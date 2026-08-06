@@ -1,31 +1,68 @@
 /**
  * Foundation: Zod env validation — fail fast before any side effects.
  *
- * IMPLEMENT:
- * - Define a Zod schema for all process.env keys used by the API.
- * - Call `schema.parse(process.env)` once and export a typed `env` object.
- * - Document every variable in docs/env.md and apps/api/.env.example.
- *
  * @see docs/foundation.md
  * @see docs/architecture-roadmap.md §9 Configuration & Secrets
  */
 
-export type Env = {
-  NODE_ENV: "development" | "test" | "production";
-  HOST: string;
-  PORT: number;
-  LOG_LEVEL: string;
-  DATABASE_URL: string;
-  REDIS_URL: string;
-  SMTP_URL: string;
-};
+import { config as loadDotenv } from "dotenv";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { z } from "zod";
+
+const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+
+loadDotenv({ path: resolve(apiRoot, ".env"), quiet: true });
+
+const logLevels = [
+  "fatal",
+  "error",
+  "warn",
+  "info",
+  "debug",
+  "trace",
+  "silent",
+] as const;
+
+const envSchema = z.object({
+  NODE_ENV: z
+    .enum(["development", "test", "production"])
+    .default("development"),
+  HOST: z.string().min(1).default("127.0.0.1"),
+  PORT: z.coerce.number().int().positive().default(8100),
+  LOG_LEVEL: z.enum(logLevels).default("info"),
+  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  REDIS_URL: z.string().min(1, "REDIS_URL is required"),
+  SMTP_URL: z.string().min(1, "SMTP_URL is required"),
+});
+
+export type Env = z.infer<typeof envSchema>;
+
+let cached: Env | undefined;
 
 /**
- * Placeholder until Zod validation is wired.
- * Replace with: `export const env = envSchema.parse(process.env)`
+ * Parse and cache env once. Call from server/cli entrypoints before any I/O.
  */
 export function loadEnv(): Env {
-  throw new Error(
-    "TODO(foundation): implement Zod env validation in src/config/env.ts",
-  );
+  if (cached) {
+    return cached;
+  }
+
+  const parsed = envSchema.safeParse(process.env);
+  if (!parsed.success) {
+    const details = parsed.error.flatten().fieldErrors;
+    console.error("Invalid environment configuration:", details);
+    throw new Error("Invalid environment configuration");
+  }
+
+  cached = parsed.data;
+  return cached;
+}
+
+/** Access env after `loadEnv()` has run. */
+export function getEnv(): Env {
+  if (!cached) {
+    throw new Error("Environment not loaded. Call loadEnv() first.");
+  }
+  return cached;
 }

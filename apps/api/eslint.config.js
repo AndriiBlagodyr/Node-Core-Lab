@@ -1,20 +1,25 @@
-// Foundation: strict ESLint for the API package.
-// IMPLEMENT: enable typescript-eslint recommended + Fastify-friendly rules.
-// Optionally add import boundary rules later (architecture roadmap §1).
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 
-/** @type {import("eslint").Linter.Config[]} */
-export default [
+export default tseslint.config(
   {
     ignores: ["dist/**", "node_modules/**", "labs/**"],
   },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     rules: {
-      // TODO(foundation): replace with typescript-eslint flat config
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
     },
   },
-];
+);
