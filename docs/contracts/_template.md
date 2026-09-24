@@ -32,7 +32,7 @@ List the main domain entities the API talks about. Keep it abstract; do not past
 
 Group endpoints by resource. For each endpoint specify method, path, auth, request, response, and possible errors.
 
-### `METHOD /api/<path>`
+### `METHOD /api/<module>/<path>`
 
 - Auth: public / authenticated / admin.
 - Idempotent: yes / no.

@@ -6,8 +6,23 @@ Learn how to structure a non-trivial Node.js backend so it stays maintainable, t
 
 ## How to Use This File
 
-- This roadmap is cross-cutting. Apply its patterns inside every backend module.
-- Each section has tasks that produce reusable building blocks for the rest of the project.
+- This roadmap is **cross-cutting, not a prerequisite**. Each section says when to apply it; the [Stage Map](./project-roadmap.md#stage-map) shows the same thing per stage.
+- Sections define the *design* (rules, abstractions, decisions). The matching backend module owns the *implementation* tasks, so the two files don't repeat each other.
+
+| § | Topic | Apply in |
+| --- | --- | --- |
+| 0 | Decision Records | Every stage |
+| 1–3 | Layering, DI, Repositories | M1 (first real domain) |
+| 4 | Error handling | Foundation |
+| 5–6 | API design, Validation | Before freezing the M1 contract |
+| 7 | Caching strategy | M6 |
+| 8 | Domain events & outbox | M4, M7 |
+| 9 | Configuration | Foundation |
+| 10 | Observability hooks | Foundation → M10 |
+| 11 | Concurrency & idempotency | M2, M4, M7 |
+| 12 | Cross-cutting concerns | As needed, from M1 |
+| 13 | Secret management | M1 (JWT keys) → M12 |
+| 14 | PII & privacy | After M1; retention job in M8 |
 
 ## 0. Decision Records (ADRs)
 
@@ -16,15 +31,8 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 ### Tasks
 
 - [ ] Read [ADR 0001](./adr/0001-record-architecture-decisions.md) and the [ADR index](./adr/README.md).
-- [ ] Write an ADR for the ORM choice (Drizzle vs Prisma).
-- [ ] Write an ADR for the cookie and CSRF strategy.
-- [ ] Write an ADR for refresh token rotation policy.
-- [ ] Write an ADR for queue technology choice.
-- [ ] Write an ADR for caching strategy.
-- [ ] Write an ADR for OAuth/OIDC providers and account linking rules.
-- [ ] Write an ADR for the observability stack.
-- [ ] Write an ADR for the deployment target.
-- [ ] Document supersedence rules and apply them when revisiting a past decision.
+- [ ] Work through the [ADR backlog](./adr/README.md#backlog). It lists each pending decision and the stage that needs it.
+- [ ] Apply the supersedence rules the first time you revisit a past decision.
 - [ ] Reference the relevant ADR from each module's roadmap section or contract file.
 
 ### Learning Outcomes
@@ -102,7 +110,7 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 - [ ] Define a pagination contract: cursor-based default, optional offset.
 - [ ] Define filter and sort query param conventions.
 - [ ] Define an idempotency-key strategy for unsafe operations.
-- [ ] Define API versioning rules: URL prefix or header.
+- [ ] Define the route prefix and versioning rules (URL prefix or header). The frontend is inconsistent today: auth calls `/auth/*`, while every other module calls `/api/<module>/*`.
 - [ ] Generate OpenAPI from Zod schemas.
 - [ ] Publish a typed client to the frontend through `@repo/types`.
 
@@ -128,15 +136,14 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 
 ## 7. Caching Strategy
 
+Implementation lives in [Backend M6](./backend-roadmap.md#module-6-caching). This section is the design.
+
 ### Tasks
 
-- [ ] Define a cache abstraction with `get`, `set`, `del`, and `wrap`.
-- [ ] Implement an in-memory LRU cache.
-- [ ] Implement a Redis-backed cache.
-- [ ] Add HTTP caching: `ETag`, `Cache-Control`, conditional GET.
-- [ ] Add cache-aside flow for read-heavy endpoints.
-- [ ] Add stampede protection with single-flight or short locks.
-- [ ] Define invalidation rules per resource.
+- [ ] Define a cache abstraction (`get`, `set`, `del`, `wrap`) that both the LRU and Redis adapters implement.
+- [ ] Define a key-naming convention (`<module>:<resource>:<id>:v<n>`) and a TTL policy.
+- [ ] Define invalidation rules per resource, and which endpoints are never cached (per-user or auth data).
+- [ ] Decide the HTTP caching policy: which responses get `ETag` / `Cache-Control`.
 
 ### Learning Outcomes
 
@@ -162,11 +169,11 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 
 ### Tasks
 
-- [ ] Define an `env.ts` module that validates env vars with Zod at startup.
-- [ ] Fail fast if any required env var is missing.
-- [ ] Load different configs per environment.
-- [ ] Document every env var in `docs/env.md`.
-- [ ] Add a secret scanning hook for commits.
+- [x] Define an `env.ts` module that validates env vars with Zod at startup (`apps/api/src/config/env.ts`).
+- [x] Fail fast if any required env var is missing.
+- [ ] Load different configs per environment (`NODE_ENV=test` → separate `DATABASE_URL`).
+- [x] Document every env var in [`docs/env.md`](./env.md).
+- Secret scanning is covered in [§13](#13-secret-management).
 
 ### Learning Outcomes
 
@@ -175,12 +182,14 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 
 ## 10. Observability Hooks in Architecture
 
+The `requestId` plugin and ALS context are built in Foundation (`plugins/request-id.ts`, `lib/request-context.ts`). Tracing and metrics come in [M10](./backend-roadmap.md#module-10-observability).
+
 ### Tasks
 
-- [ ] Add a `requestId` middleware that creates a stable ID per request.
-- [ ] Propagate `requestId` and `traceId` through `AsyncLocalStorage`.
-- [ ] Add structured logger that automatically includes context.
-- [ ] Add a small metrics helper used in services.
+- [ ] Rule: services read context through `getRequestContext()` and never receive `request` as a parameter.
+- [ ] Add `traceId` (and later `userId`) to the ALS context alongside `requestId`.
+- [ ] Rule: business code logs through an injected logger, never by importing the Pino transport.
+- [ ] Add a small metrics helper interface that services depend on (no-op until M10).
 
 ### Learning Outcomes
 
@@ -226,7 +235,7 @@ Every non-trivial decision is captured as an Architecture Decision Record in [`d
 - [ ] Add a pre-commit hook that scans staged files for secrets (gitleaks or trufflehog).
 - [ ] Document the runtime secret fetching strategy (cloud KMS, HashiCorp Vault, or `.env` for local development) without committing any actual secret.
 - [ ] Add an ADR that captures the chosen secret store and rotation policy.
-- [ ] Ensure logs and error reports redact secret values (already covered by Pino redaction in module 10, cross-link here).
+- [ ] Ensure logs and error reports redact secret values (Pino redaction is set up in Foundation and extended in [M10](./backend-roadmap.md#module-10-observability)).
 
 ### Learning Outcomes
 

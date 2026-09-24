@@ -6,7 +6,7 @@
 
 ## Status
 
-- Phase A status: Not started.
+- Phase A status: Not started. DTOs and routes already exist in code (see below).
 - Last updated: TBD.
 - Owners: backend, frontend.
 
@@ -19,6 +19,29 @@
 ## Scope (high level)
 
 Multipart chunked uploads, resumable uploads, processing pipeline (image/video), private file access through signed URLs, and HTTP range streaming for video playback.
+
+## Starting Point (already in code)
+
+Extract the contract from these sources instead of designing from scratch ([why](../project-roadmap.md#how-this-project-deviates)):
+
+- DTOs: [`packages/types/src/files.ts`](../../packages/types/src/files.ts)
+- Routes: `real*` object in [`apps/web/src/lib/api/files.ts`](../../apps/web/src/lib/api/files.ts)
+
+Routes the frontend calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
+
+- `POST /api/files/uploads`
+- `POST /api/files/uploads/:sessionId/chunks (multipart: `chunk`, `chunkIndex`)`
+- `POST /api/files/uploads/:sessionId/complete`
+- `DELETE /api/files/uploads/:sessionId`
+- `GET /api/files`
+- `GET /api/files/:id`
+- `GET /api/files/:id/status`
+- `GET /api/files/:id/stream-url`
+
+Known gaps to resolve before freezing:
+
+- [ ] Chunks are sent as `multipart/form-data` with an index, not as `Content-Range` bodies. The backend roadmap assumes content-range, so pick one.
+- [ ] The adapter has no "get upload progress" endpoint for resuming after a reload.
 
 ## To Fill in Phase A
 

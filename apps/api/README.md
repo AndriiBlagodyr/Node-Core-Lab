@@ -22,11 +22,11 @@ The frontend at [`apps/web`](../web) runs against mocks by default. When real ro
 ```bash
 cp apps/api/.env.example apps/api/.env
 docker compose up -d                    # from repo root
-pnpm --filter @app/api dev              # throws until stubs are filled
+pnpm --filter @app/api dev              # exits with TODO(foundation) until app.ts/server.ts are filled
 pnpm --filter @app/api cli help
 ```
 
-Implementation map and fill-in order: **[docs/foundation.md](../../docs/foundation.md)**.
+Implementation map, fill-in order, and per-step status: **[docs/foundation.md](../../docs/foundation.md#fill-in-order-and-status)**.
 
 ## Fundamentals labs
 
@@ -49,8 +49,12 @@ Each script matches a section in [Node.js Fundamentals Roadmap](../../docs/node-
 
 Example: `pnpm --filter @app/api lab:06 1`
 
+All 12 labs are complete. Each script keeps its "expected / happened / why" notes inline.
+
+`lab:11:inspect` and `lab:11:inspect-brk` use POSIX `NODE_OPTIONS=...` syntax. On Windows PowerShell, run `$env:NODE_OPTIONS='--inspect'; pnpm --filter @app/api lab:11 <n>` instead.
+
 ## Suggested order
 
-1. ~~Fundamentals labs~~ under `labs/`.
-2. **Foundation** — fill stubs in `src/` ([docs/foundation.md](../../docs/foundation.md)).
-3. Architecture patterns + Auth module ([backend-roadmap](../../docs/backend-roadmap.md)).
+1. ✅ Fundamentals labs under `labs/`.
+2. 🟡 **Foundation**: fill stubs in `src/` ([docs/foundation.md](../../docs/foundation.md)).
+3. Auth module (M1), then the rest in [Stage Map](../../docs/project-roadmap.md#stage-map) order.

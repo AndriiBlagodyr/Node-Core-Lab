@@ -4,27 +4,22 @@
 
 Build a complete Next.js frontend that looks and behaves like a real product while the backend is implemented separately. The frontend should use shared API contracts from `@repo/types`, typed API clients, validation, realistic mock data, and production-quality UI states.
 
-## Technology Decisions
+## Status
 
-- Framework: Next.js App Router.
-- Styling: CSS Modules. Do not use Tailwind.
-- Forms: React Hook Form + Zod.
-- Data fetching: TanStack Query.
-- API client: typed wrapper around `fetch` or axios.
-- State: local React state first; add Zustand only if cross-page client state becomes necessary.
-- Mocking: local mock data and mock API adapters first; MSW can be added later if needed.
+✅ **Implemented on mocks for all five modules.** Every page runs with `NEXT_PUBLIC_API_MODE=mock`. Unchecked boxes below are real gaps, summarized in [Remaining gaps](#remaining-gaps). Stack: see [project-roadmap → Stack](./project-roadmap.md#stack). Rules the code follows: CSS Modules only (no Tailwind), local state first (add Zustand only if cross-page state appears), and in-process mock adapters (MSW optional later).
 
-## Foundation Tasks
+## Foundation
 
-- Create app shell with main layout, navigation, and responsive page structure.
-- Create reusable UI components: button, input, textarea, select, checkbox, modal, card, table, badge, toast, skeleton, empty state, error state.
-- Add form field components integrated with validation errors.
-- Add API client with base URL configuration.
-- Add TanStack Query provider.
-- Add typed hooks for each module API.
-- Add mock data for every module.
-- Add protected route handling.
-- Add consistent loading and error handling patterns.
+- [x] Create app shell with main layout, navigation, and responsive page structure.
+- [x] Create reusable UI components: button, input, textarea, select, modal, card, table, badge, toast, skeleton, empty state, error state.
+- [ ] Checkbox component (not built yet).
+- [x] Add form field components integrated with validation errors.
+- [x] Add API client with base URL configuration.
+- [x] Add TanStack Query provider.
+- [x] Typed data access per module (inline TanStack Query calls in pages; there's no shared `hooks/<module>` layer).
+- [x] Add mock data for every module.
+- [x] Add protected route handling.
+- [x] Add consistent loading and error handling patterns.
 
 ## Module 1: Auth & Security
 
@@ -33,34 +28,35 @@ Build a complete Next.js frontend that looks and behaves like a real product whi
 
 ### Pages
 
-- Login page.
-- Register page.
-- Profile page.
-- Session expired page or modal.
+- [x] Login page.
+- [x] Register page.
+- [x] Profile page.
+- [ ] Session expired page or modal (today a 401 only shows as an error).
 
 ### UI Tasks
 
-- Build login form with email and password validation.
-- Build register form with password confirmation.
-- Build profile form with editable user fields.
-- Add auth-aware navigation.
-- Add protected page wrapper.
-- Add unauthorized and forbidden states.
+- [x] Build login form with email and password validation.
+- [x] Build register form with password confirmation.
+- [x] Build profile form with editable user fields.
+- [x] Add auth-aware navigation.
+- [x] Add protected page wrapper.
+- [x] Add unauthorized state.
+- [ ] Add forbidden (403) state.
 
 ### API Client Tasks
 
-- Add `login`, `register`, `logout`, `getProfile`, `updateProfile`, and `refreshSession` methods.
-- Handle `401` responses.
-- Add refresh-token retry flow in the API client.
-- Keep access token out of localStorage.
-- Assume refresh token is stored by the backend in an HttpOnly cookie.
+- [x] Add `login`, `register`, `logout`, `getProfile`, `updateProfile`, and `refreshSession` methods.
+- [x] Handle `401` responses.
+- [ ] Add refresh-token retry flow in the API client. `AuthProvider` refreshes once on mount; `http.ts` doesn't retry a request after a 401.
+- [x] Keep access token out of localStorage.
+- [x] Assume refresh token is stored by the backend in an HttpOnly cookie.
 
 ### Mock Tasks
 
-- Mock successful login.
-- Mock validation errors.
-- Mock expired session.
-- Mock profile update.
+- [x] Mock successful login.
+- [x] Mock validation errors.
+- [x] Mock expired session.
+- [x] Mock profile update.
 
 ### Social Login UI
 
@@ -68,30 +64,30 @@ Frontend integration with Google and GitHub via the backend OAuth/OIDC endpoints
 
 #### Pages and Components
 
-- Add Sign in with Google and Sign in with GitHub buttons on the Login page.
-- Add the same buttons on the Register page (same flow, different copy).
-- Add `/auth/callback/[provider]` page to receive the redirect from the backend, show a loading state, and route to the next destination.
-- Add an account-linking section on the Profile page that lists connected providers and lets the user link or unlink them.
+- [x] Add Sign in with Google and Sign in with GitHub buttons on the Login page.
+- [x] Add the same buttons on the Register page (same flow, different copy).
+- [x] Add `/auth/callback/[provider]` page to receive the redirect from the backend, show a loading state, and route to the next destination.
+- [x] Add an account-linking section on the Profile page that lists connected providers and lets the user link or unlink them.
 
 #### UI Tasks
 
-- Trigger the OAuth flow by navigating to the backend authorization endpoint with a `returnTo` parameter.
-- Show provider-specific button styling that meets brand guidelines.
-- Show error states for cancelled login, denied permissions, and provider downtime.
-- Show "email already in use" state with a clear path to log in and link from the profile.
-- Disable social login buttons while a flow is in progress.
+- [x] Trigger the OAuth flow by navigating to the backend authorization endpoint with a `returnTo` parameter.
+- [x] Show provider-specific button styling that meets brand guidelines.
+- [x] Show error states for cancelled login, denied permissions, and provider downtime.
+- [x] Show "email already in use" state with a clear path to log in and link from the profile.
+- [x] Disable social login buttons while a flow is in progress.
 
 #### API Client Tasks
 
-- Add `getOAuthAuthorizeUrl(provider, returnTo)` helper that builds the backend redirect URL.
-- Add `linkSocialAccount(provider)` and `unlinkSocialAccount(provider)` methods.
-- Add `getLinkedAccounts()` method for the profile page.
+- [x] Add `getOAuthAuthorizeUrl(provider, returnTo)` helper that builds the backend redirect URL.
+- [x] Add `linkSocialAccount(provider)` and `unlinkSocialAccount(provider)` methods.
+- [x] Add `getLinkedAccounts()` method for the profile page.
 
 #### Mock Tasks
 
-- Mock the callback page success state.
-- Mock the callback page failure states (invalid state, denied, email collision).
-- Mock the linked-accounts list with both linked and unlinked providers.
+- [x] Mock the callback page success state.
+- [x] Mock the callback page failure states (invalid state, denied, email collision).
+- [x] Mock the linked-accounts list with both linked and unlinked providers.
 
 ## Module 2: High-Performance Search
 
@@ -100,35 +96,35 @@ Frontend integration with Google and GitHub via the backend OAuth/OIDC endpoints
 
 ### Pages
 
-- Search dashboard page.
-- Data table page.
-- Item details page.
+- [x] Search dashboard page.
+- [x] Data table page.
+- [x] Item details page.
 
 ### UI Tasks
 
-- Build data table with sorting.
-- Add text search with debounce.
-- Add advanced filters.
-- Sync filters, sorting, and cursor state with URL query params.
-- Add infinite scroll.
-- Add loading skeletons.
-- Add empty state for no results.
-- Add error state with retry.
-- Add column visibility controls.
+- [x] Build data table with sorting.
+- [x] Add text search with debounce.
+- [x] Add advanced filters.
+- [x] Sync filters, sorting, and cursor state with URL query params.
+- [x] Add infinite scroll.
+- [x] Add loading skeletons.
+- [x] Add empty state for no results.
+- [x] Add error state with retry.
+- [ ] Add column visibility controls.
 
 ### API Client Tasks
 
-- Add typed search request and response.
-- Support cursor pagination.
-- Support filter serialization.
-- Support query cancellation during rapid search changes.
+- [x] Add typed search request and response.
+- [x] Support cursor pagination.
+- [x] Support filter serialization.
+- [x] Support query cancellation during rapid search changes.
 
 ### Mock Tasks
 
-- Add large mock dataset.
-- Simulate slow network.
-- Simulate empty results.
-- Simulate next-page loading.
+- [x] Add large mock dataset.
+- [x] Simulate slow network.
+- [x] Simulate empty results.
+- [x] Simulate next-page loading.
 
 ## Module 3: File Streaming & Processing
 
@@ -137,35 +133,35 @@ Frontend integration with Google and GitHub via the backend OAuth/OIDC endpoints
 
 ### Pages
 
-- File upload page.
-- File library page.
-- File details page.
-- Video player page.
+- [x] File upload page.
+- [x] File library page.
+- [x] File details page.
+- [x] Video player page.
 
 ### UI Tasks
 
-- Build drag-and-drop uploader.
-- Show upload progress.
-- Support pause, resume, and cancel controls in the UI.
-- Show file validation errors.
-- Show processing status after upload.
-- Build video player with loading and error states.
-- Build private file access UI.
+- [x] Build drag-and-drop uploader.
+- [x] Show upload progress.
+- [x] Support pause, resume, and cancel controls in the UI.
+- [x] Show file validation errors.
+- [x] Show processing status after upload.
+- [x] Build video player with loading and error states.
+- [x] Build private file access UI.
 
 ### API Client Tasks
 
-- Add multipart upload initiation.
-- Add chunk upload method.
-- Add upload completion method.
-- Add processing status polling.
-- Add file download and stream URL methods.
+- [x] Add multipart upload initiation.
+- [x] Add chunk upload method.
+- [x] Add upload completion method.
+- [x] Add processing status polling.
+- [x] Add file download and stream URL methods.
 
 ### Mock Tasks
 
-- Simulate chunk upload progress.
-- Simulate processing states.
-- Simulate failed upload.
-- Simulate video file playback metadata.
+- [x] Simulate chunk upload progress.
+- [x] Simulate processing states.
+- [x] Simulate failed upload.
+- [x] Simulate video file playback metadata.
 
 ## Module 4: Task Queue & Background Processing
 
@@ -174,35 +170,35 @@ Frontend integration with Google and GitHub via the backend OAuth/OIDC endpoints
 
 ### Pages
 
-- Jobs dashboard.
-- Job details page.
-- Report generation page.
+- [x] Jobs dashboard.
+- [x] Job details page.
+- [x] Report generation page.
 
 ### UI Tasks
 
-- Display job list with statuses.
-- Display progress bars.
-- Add status badges: queued, running, completed, failed, cancelled.
-- Add retry action.
-- Add cancel action.
-- Add job logs preview.
-- Add polling or SSE-based live updates.
+- [x] Display job list with statuses.
+- [x] Display progress bars.
+- [x] Add status badges: queued, running, completed, failed, cancelled.
+- [x] Add retry action.
+- [x] Add cancel action.
+- [x] Add job logs preview.
+- [x] Add polling or SSE-based live updates.
 
 ### API Client Tasks
 
-- Add create job method.
-- Add get jobs method.
-- Add get job details method.
-- Add retry job method.
-- Add cancel job method.
-- Add SSE or polling update handler.
+- [x] Add create job method.
+- [x] Add get jobs method.
+- [x] Add get job details method.
+- [x] Add retry job method.
+- [x] Add cancel job method.
+- [x] Add SSE or polling update handler.
 
 ### Mock Tasks
 
-- Simulate full job lifecycle.
-- Simulate failed job.
-- Simulate retry success.
-- Simulate long-running report generation.
+- [x] Simulate full job lifecycle.
+- [x] Simulate failed job.
+- [x] Simulate retry success.
+- [x] Simulate long-running report generation.
 
 ## Module 5: Real-time Chat & WebSockets
 
@@ -211,40 +207,54 @@ Frontend integration with Google and GitHub via the backend OAuth/OIDC endpoints
 
 ### Pages
 
-- Chat page.
-- Contact list.
-- Conversation view.
+- [x] Chat page.
+- [x] Contact list.
+- [x] Conversation view.
 
 ### UI Tasks
 
-- Build chat layout with sidebar and message window.
-- Show online and offline presence.
-- Show typing indicator.
-- Add optimistic message sending.
-- Add unread message badges.
-- Add message delivery states.
-- Add reconnecting state.
-- Add paginated chat history loading.
+- [x] Build chat layout with sidebar and message window.
+- [x] Show online and offline presence.
+- [x] Show typing indicator.
+- [x] Add optimistic message sending.
+- [x] Add unread message badges.
+- [x] Add message delivery states.
+- [x] Add reconnecting state.
+- [x] Add paginated chat history loading.
 
 ### API Client Tasks
 
-- Add WebSocket connection layer.
-- Add authenticated socket connection handling.
-- Add event handlers for messages, typing, presence, and reconnect.
-- Add REST fallback methods for chat history.
+- [x] Add WebSocket connection layer.
+- [x] Add authenticated socket connection handling.
+- [x] Add event handlers for messages, typing, presence, and reconnect.
+- [x] Add REST fallback methods for chat history.
 
 ### Mock Tasks
 
-- Mock incoming messages.
-- Mock typing indicator.
-- Mock online status changes.
-- Mock reconnect behavior.
+- [x] Mock incoming messages.
+- [x] Mock typing indicator.
+- [x] Mock online status changes.
+- [x] Mock reconnect behavior.
 
-## Quality Tasks
+## Quality
 
-- Add component tests for reusable components.
-- Add tests for forms and validation.
-- Add API client tests with mocked responses.
-- Add Playwright smoke tests for critical flows.
-- Add accessibility checks for forms, modals, and tables.
-- Add Web Vitals reporting placeholder.
+No frontend tests exist yet. Do these alongside [Backend M11](./backend-roadmap.md#module-11-testing-strategy).
+
+- [ ] Add component tests for reusable components.
+- [ ] Add tests for forms and validation.
+- [ ] Add API client tests with mocked responses.
+- [ ] Add Playwright smoke tests for critical flows. These double as the Phase D E2E tests.
+- [ ] Add accessibility checks for forms, modals, and tables.
+- [ ] Add Web Vitals reporting placeholder.
+
+## Remaining gaps
+
+Frontend work the backend modules will need. Close each gap in the same PR as its matching backend module.
+
+| Module | Gap |
+| --- | --- |
+| Foundation | Checkbox component |
+| M1 Auth | Refresh-on-401 retry in `http.ts`; session-expired UI; 403 state; no pages for verify email, forgot/reset password, or TOTP 2FA even though the backend roadmap plans those endpoints |
+| M2 Search | Column visibility controls |
+| M5 Chat | No REST send or mark-read calls in the `real*` adapter; the WebSocket is the only write path |
+| All | Tests (see [Quality](#quality)) |

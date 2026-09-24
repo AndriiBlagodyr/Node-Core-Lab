@@ -4,51 +4,36 @@
 
 Use the backend as the main Node.js learning track. Build real backend systems with Fastify, TypeScript, PostgreSQL, Redis, streams, WebSockets, queues, security, tests, and observability. Aim for senior-level depth: not "it works" but "I can explain every layer".
 
-## Prerequisites
+## How to Use This File
 
-Before starting Module 1, complete the foundational labs:
-
-- [ ] [Node.js Fundamentals Roadmap](./node-fundamentals-roadmap.md): event loop, streams, workers, AsyncLocalStorage, profiling.
-- [ ] [Architecture Roadmap](./architecture-roadmap.md): layering, DI, error handling, API design, caching strategy.
-
-These two files are referenced from every module below.
-
-## Technology Decisions
-
-- Runtime: Node.js (LTS).
-- Language: TypeScript with strict mode.
-- Framework: Fastify with plugin architecture.
-- Database: PostgreSQL.
-- ORM/query layer: Drizzle for SQL learning, or Prisma for faster delivery.
-- Validation: Zod, integrated with Fastify schemas.
-- Auth: JWT access tokens + refresh token rotation in HttpOnly cookies.
-- Password hashing: argon2id.
-- Realtime: native WebSocket via `@fastify/websocket` or Socket.io.
-- Cache and pub/sub: Redis.
-- Queue: BullMQ.
-- Email: provider-agnostic abstraction (SES, Resend, Postmark) with a dev SMTP fallback.
-- Testing: Vitest, Supertest or Fastify `inject`, Testcontainers for Postgres and Redis.
-- Profiling: `clinic.js`, `0x`, `autocannon`, `k6`.
+- Work in the order given by the [Stage Map](./project-roadmap.md#stage-map), not by module number (M6 Caching comes right after M2).
+- Stack and tool choices live in [project-roadmap → Stack](./project-roadmap.md#stack). Anything marked *ADR pending* needs an ADR before you build on it.
+- [Architecture](./architecture-roadmap.md) is cross-cutting. Apply the sections listed for each stage in the Stage Map; you don't have to finish it first.
+- Product modules (M1–M5) also follow the [delivery workflow](./project-roadmap.md#module-delivery-workflow): freeze the contract before writing routes.
 
 ## Foundation
 
-Scaffold and file map: [docs/foundation.md](./foundation.md). Stubs live under `apps/api/src/`.
+Scaffold, file map, and per-file status: [docs/foundation.md](./foundation.md). Stubs live under `apps/api/src/`.
+
+- ADRs: ORM choice (Drizzle vs Prisma) before migrations.
 
 ### Tasks
 
-- [ ] Create Fastify app with TypeScript and strict ESLint.
+- [ ] Create Fastify app with TypeScript and strict ESLint. *(ESLint config exists; app factory still a stub.)*
 - [ ] Adopt Fastify plugin architecture and encapsulation.
-- [ ] Add env validation with Zod, fail fast on misconfig.
+- [x] Add env validation with Zod, fail fast on misconfig.
 - [ ] Add typed route schemas with Fastify type providers.
 - [ ] Add global error handler that maps domain errors to HTTP.
 - [ ] Add Pino structured logger with redaction.
 - [ ] Add `requestId` middleware and propagate via `AsyncLocalStorage`.
 - [ ] Add health, readiness, and liveness endpoints.
-- [ ] Add Docker Compose with PostgreSQL, Redis, and MailHog.
+- [x] Add Docker Compose with PostgreSQL, Redis, and MailHog.
 - [ ] Add migration workflow (Drizzle Kit or Prisma Migrate).
 - [ ] Add seed scripts and test database workflow.
 - [ ] Add OpenAPI generation from route schemas.
 - [ ] Add a small CLI for running scripts and migrations.
+- [ ] Add Vitest with a first `app.inject()` test for `/live`. M1 testing tasks depend on this harness.
+- [ ] Add a minimal GitHub Actions workflow (install → lint → typecheck → test) on every PR. M12 extends it with images and releases.
 
 ### Learning Outcomes
 
@@ -60,6 +45,8 @@ Scaffold and file map: [docs/foundation.md](./foundation.md). Stubs live under `
 
 - Contract: [docs/contracts/auth.md](./contracts/auth.md)
 - Shared types: `packages/types/src/auth.ts`
+- ADRs: cookie + CSRF strategy, refresh rotation policy, OAuth providers and account linking.
+- Email (verification, reset) goes through the Foundation `Mailer` synchronously for now. M9 moves it onto a queue.
 
 ### Data Model
 
@@ -120,7 +107,7 @@ Client-side integration only. The project does not implement its own Identity Pr
 - [ ] Add an endpoint to unlink a `social_account` while keeping the local user.
 - [ ] Add audit log entries for `social_login`, `social_account_linked`, and `social_account_unlinked`.
 
-#### Testing Tasks
+#### OAuth Testing Tasks
 
 - [ ] Test successful Google login on a new account.
 - [ ] Test successful GitHub login on a new account.
@@ -129,7 +116,7 @@ Client-side integration only. The project does not implement its own Identity Pr
 - [ ] Test invalid `state` and invalid `nonce`.
 - [ ] Test expired or wrong-issuer ID token.
 
-#### Learning Outcomes
+#### OAuth Learning Outcomes
 
 - [ ] Explain Authorization Code flow with PKCE and why PKCE matters even server-side.
 - [ ] Explain the difference between an OAuth access token and an OIDC ID token.
@@ -162,7 +149,7 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 - [ ] A09 Security Logging and Monitoring Failures: audit log covers login, logout, failed login, token reuse, password change, 2FA change, social account linking.
 - [ ] A10 Server-Side Request Forgery: outbound URLs (e.g. provider JWKS, password reset email links) are validated against an allow-list and reject private IP ranges.
 
-#### Learning Outcomes
+#### OWASP Learning Outcomes
 
 - [ ] Walk through each OWASP Top 10 category and point to the file or test that mitigates it in this project.
 - [ ] Explain a realistic exploit scenario for at least three of the categories.
@@ -285,6 +272,7 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 - Contract: [docs/contracts/jobs.md](./contracts/jobs.md)
 - Shared types: `packages/types/src/jobs.ts`
+- ADRs: queue technology (BullMQ vs alternatives).
 
 ### Data Model
 
@@ -308,7 +296,6 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 - [ ] Implement job progress updates.
 - [ ] Implement retry and exponential backoff.
 - [ ] Implement dead-letter queue for permanently failed jobs.
-- [ ] Implement repeatable / scheduled jobs (cron).
 - [ ] Implement job priorities.
 - [ ] Implement worker concurrency tuning.
 - [ ] Implement rate-limited workers.
@@ -341,6 +328,7 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 - Contract: [docs/contracts/chat.md](./contracts/chat.md)
 - Shared types: `packages/types/src/chat.ts`
+- ADRs: WebSocket library (`@fastify/websocket` vs Socket.io); the frontend currently expects a plain WebSocket.
 
 ### Data Model
 
@@ -394,6 +382,10 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ## Module 6: Caching
 
+Implements the design from [Architecture §7](./architecture-roadmap.md#7-caching-strategy), applied first to the M2 search endpoints.
+
+- ADRs: caching strategy.
+
 ### Tasks
 
 - [ ] Implement in-memory LRU cache.
@@ -444,11 +436,12 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ### Tasks
 
-- [ ] Implement cron jobs via BullMQ repeatable jobs.
+- [ ] Implement cron jobs via BullMQ repeatable jobs (the M4 queue setup is a prerequisite).
 - [ ] Implement leader election so cron runs once across instances.
 - [ ] Add job for daily report generation.
 - [ ] Add job for stale session cleanup.
 - [ ] Add job for soft-deleted record purging.
+- [ ] Add data-retention enforcement job ([Architecture §14](./architecture-roadmap.md#14-data-privacy-and-pii-handling)).
 
 ### Testing Tasks
 
@@ -464,8 +457,7 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ### Tasks
 
-- [ ] Define a provider-agnostic `Mailer` interface.
-- [ ] Implement SMTP adapter for development (MailHog).
+- [ ] Harden the Foundation `Mailer` interface (the SMTP/MailHog adapter already exists from Foundation).
 - [ ] Implement transactional provider adapter (SES, Resend, Postmark).
 - [ ] Build email templates with MJML or React Email.
 - [ ] Send email asynchronously through a queue.
@@ -484,9 +476,11 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ## Module 10: Observability
 
+- ADRs: observability stack.
+
 ### Tasks
 
-- [ ] Configure Pino with redaction and pretty dev logs.
+- [ ] Extend Foundation's Pino setup: pretty dev logs, per-environment levels, PII redaction paths.
 - [ ] Add `requestId`, `traceId`, `userId` to log context via `AsyncLocalStorage`.
 - [ ] Integrate OpenTelemetry SDK: traces, metrics, logs.
 - [ ] Export metrics to Prometheus, design 3 dashboards: API, queue, DB.
@@ -509,13 +503,12 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ## Module 11: Testing Strategy
 
+Each module already writes its own tests. This module consolidates them into a deliberate strategy: shared fixtures, gates, baselines, and policy.
+
 ### Tasks
 
-- [ ] Build unit tests for services with fake repositories.
-- [ ] Build integration tests for API routes via Fastify `inject`.
-- [ ] Build database integration tests with Testcontainers.
-- [ ] Build queue worker tests with Testcontainers Redis.
-- [ ] Build WebSocket integration tests.
+- [ ] Extract shared test helpers: app factory for `inject`, Testcontainers Postgres/Redis fixtures, data builders.
+- [ ] Audit coverage per layer: services (fake repositories), routes (`inject`), DB (Testcontainers), workers, WebSockets.
 - [ ] Build contract tests against `@repo/types`.
 - [ ] Build load tests with `k6` or `autocannon`, store baseline numbers.
 - [ ] Optional: mutation tests with Stryker on critical modules.
@@ -530,17 +523,18 @@ Once the module is feature-complete, walk through OWASP Top 10 (2021) against th
 
 ## Module 12: Deployment & CI
 
+- ADRs: deployment target, secret store ([Architecture §13](./architecture-roadmap.md#13-secret-management)).
+
 ### Tasks
 
 - [ ] Add multi-stage Dockerfile.
 - [ ] Add `.dockerignore`.
-- [ ] Add GitHub Actions pipeline: lint, typecheck, test, build, image build.
+- [ ] Extend the Foundation CI workflow with build, image build, and migration checks.
 - [ ] Add migration deployment strategy with backwards-compatible steps.
 - [ ] Add health, readiness, liveness probe documentation.
 - [ ] Document graceful shutdown timing.
-- [ ] Add Renovate or Dependabot.
 - [ ] Add a release workflow with changelog.
-- [ ] Document required environment variables and secrets.
+- [ ] Document production-only environment variables and secrets in [env.md](./env.md).
 - [ ] Write a production readiness checklist.
 
 ### Learning Outcomes

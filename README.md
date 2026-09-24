@@ -2,7 +2,9 @@
 
 A senior-level full-stack learning monorepo for practicing Node.js backend engineering against a production-like Next.js frontend.
 
-The frontend is **already implemented** with mock APIs that mirror the contracts in [`docs/contracts/`](docs/contracts). Your job is to implement the Fastify backend module by module — flip a single env flag and the same UI will talk to your real service.
+The frontend is **already implemented** with mock APIs that mirror the contracts in [`docs/contracts/`](docs/contracts). Your job is to implement the Fastify backend module by module. Flip a single env flag and the same UI talks to your real service.
+
+**Status:** Node.js fundamentals labs ✅ · Frontend on mocks ✅ · Backend Foundation 🟡 in progress. Details and next step: [Project Roadmap → Current Status](docs/project-roadmap.md#current-status).
 
 ## Layout
 
@@ -15,8 +17,10 @@ packages/
   types/              Shared DTOs (@repo/types) — single source of truth
   config/             Shared tsconfig presets
 docs/
+  README.md           Docs index — start here
   contracts/          Per-module API contracts (Phase A artefacts)
   adr/                Architecture Decision Records
+  notes/              Optional lab notes
 ```
 
 ## Prerequisites
@@ -58,7 +62,7 @@ cp apps/api/.env.example apps/api/.env
 docker compose up -d   # Postgres, Redis, MailHog
 ```
 
-Defaults in `apps/api/.env.example`: `HOST`, `PORT`, `DATABASE_URL`, `REDIS_URL`, `SMTP_URL` (documented in [docs/env.md](docs/env.md)).
+Every variable for both apps is documented in [docs/env.md](docs/env.md).
 
 ## Development commands
 
@@ -78,7 +82,7 @@ The app runs in **mock mode** by default — all five modules work without a bac
 pnpm --filter @app/api dev
 ```
 
-API will listen on **http://localhost:8100** once `src/server.ts` / `src/app.ts` are implemented.
+The script exists but exits with a `TODO(foundation)` error until `src/server.ts` and `src/app.ts` are implemented. After that it listens on **http://localhost:8100**.
 
 ### Start frontend + backend together
 
@@ -88,17 +92,15 @@ Root command:
 pnpm dev
 ```
 
-This runs `turbo run dev` across the monorepo. **Today** only `@app/web` has a `dev` script, so Turbo starts the frontend. When you add `"dev"` to `apps/api/package.json`, the same command will start both apps in parallel.
+This runs `turbo run dev` across the monorepo and starts both apps in parallel. Until Foundation is implemented, the API task exits with a `TODO(foundation)` error; the frontend keeps running on mocks.
 
-### Node.js fundamentals labs (backend learning track — start here)
+### Node.js fundamentals labs
 
 ```bash
-# Run a specific experiment (1–4)
-pnpm --filter @app/api exec tsx labs/01-event-loop.ts 1
-
-# Or from repo root with npx
-npx tsx apps/api/labs/01-event-loop.ts 1
+pnpm --filter @app/api lab:03 5    # lab 03 (streams), experiment 5
 ```
+
+One script per lab (`lab:01` … `lab:12`). Full table: [apps/api/README.md](apps/api/README.md#fundamentals-labs).
 
 ## Ports
 
@@ -138,8 +140,8 @@ Restart the frontend after changing env vars. The `real*` adapters call the URLs
 ## Recommended workflow per backend module
 
 1. Open the matching frontend route (already working) so you understand the UX you must support.
-2. Read the mock adapter at `apps/web/src/lib/api/<module>.ts` — the `real*` object lists the exact HTTP routes to implement and the request/response shapes.
-3. Fill in the contract stub at `docs/contracts/<module>.md` (Phase A) and lock it.
+2. Read the adapter at `apps/web/src/lib/api/<module>.ts`. Its `real*` object lists the exact HTTP routes to implement and their request/response shapes (also copied into each contract's *Starting Point*).
+3. Resolve the *Known gaps* in `docs/contracts/<module>.md` (Phase A) and mark it `Frozen`.
 4. Implement the Fastify routes in `apps/api`. Reuse types from `@repo/types`.
 5. Set `NEXT_PUBLIC_API_MODE=real`, hit the page, finish Phase D.
 6. Tick off the Learning Outcomes in [`docs/backend-roadmap.md`](docs/backend-roadmap.md).
@@ -148,23 +150,23 @@ Restart the frontend after changing env vars. The `real*` adapters call the URLs
 
 ```bash
 pnpm install           # install all workspace dependencies
-pnpm dev               # turbo run dev (FE today; FE + BE when api has dev script)
+pnpm dev               # turbo run dev (web + api)
 pnpm --filter @app/web dev    # frontend only → http://localhost:7100
 pnpm --filter @app/api dev    # backend only (after Fastify foundation)
 pnpm build             # turbo run build
-pnpm typecheck         # turbo run typecheck (web + types)
+pnpm typecheck         # turbo run typecheck (web, api, types)
 pnpm lint              # turbo run lint
 pnpm clean             # clean build artifacts and node_modules
 ```
 
 ## Roadmaps
 
-- [Project Roadmap](docs/project-roadmap.md)
-- [Node.js Fundamentals Roadmap](docs/node-fundamentals-roadmap.md) — start here
-- [Foundation map](docs/foundation.md) — Monorepo / Fastify bootstrap (current backend milestone)
-- [Architecture Roadmap](docs/architecture-roadmap.md)
-- [Backend Roadmap](docs/backend-roadmap.md)
-- [Frontend Roadmap](docs/frontend-roadmap.md)
+Full map of the docs: [docs/README.md](docs/README.md).
+
+- [Project Roadmap](docs/project-roadmap.md): status, stack, stage order. **Start here.**
+- [Foundation map](docs/foundation.md): Fastify bootstrap (current stage)
+- [Backend Roadmap](docs/backend-roadmap.md) · [Architecture Roadmap](docs/architecture-roadmap.md) · [Frontend Roadmap](docs/frontend-roadmap.md)
+- [Node.js Fundamentals Roadmap](docs/node-fundamentals-roadmap.md) (done)
 
 ## API Contracts
 
