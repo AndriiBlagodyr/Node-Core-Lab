@@ -6,7 +6,7 @@
 
 ## Status
 
-- Phase A status: Not started.
+- Phase A status: Not started. DTOs and routes already exist in code (see below).
 - Last updated: TBD.
 - Owners: backend, frontend.
 
@@ -19,6 +19,28 @@
 ## Scope (high level)
 
 Create, list, observe, retry, and cancel background jobs. Stream job state to the frontend via SSE with a polling fallback.
+
+## Starting Point (already in code)
+
+Extract the contract from these sources instead of designing from scratch ([why](../project-roadmap.md#how-this-project-deviates)):
+
+- DTOs: [`packages/types/src/jobs.ts`](../../packages/types/src/jobs.ts)
+- Routes: `real*` object in [`apps/web/src/lib/api/jobs.ts`](../../apps/web/src/lib/api/jobs.ts)
+
+Routes the frontend calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
+
+- `GET /api/jobs`
+- `POST /api/jobs (`Idempotency-Key` header when provided)`
+- `GET /api/jobs/:id`
+- `GET /api/jobs/:id/logs`
+- `POST /api/jobs/:id/retry`
+- `POST /api/jobs/:id/cancel`
+- `GET /api/jobs/:id/events (SSE, `withCredentials`)`
+
+Known gaps to resolve before freezing:
+
+- [ ] There is no separate polling endpoint; `GET /api/jobs/:id` doubles as the fallback. Confirm that.
+- [ ] SSE auth relies on cookies (`EventSource` can't set headers). This ties into the M1 cookie ADR.
 
 ## To Fill in Phase A
 

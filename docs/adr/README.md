@@ -23,15 +23,21 @@ This folder records every non-trivial architecture decision made in Node Core La
 | ------ | ----- | ------ | ---- |
 | [0001](./0001-record-architecture-decisions.md) | Record Architecture Decisions | Accepted | 2026-05-02 |
 
-## Suggested First ADRs to Write
+## Backlog
 
-These decisions should be captured as ADRs early in the project. They are listed for reference; create them as the corresponding modules begin.
+Decisions the roadmaps need, in the order the [Stage Map](../project-roadmap.md#stage-map) reaches them. Take the next free number when you start one.
 
-- ORM choice (Drizzle vs Prisma).
-- Cookie strategy and CSRF approach.
-- Refresh token rotation policy.
-- Queue technology (BullMQ vs alternatives).
-- Caching strategy (in-memory vs Redis vs HTTP cache).
-- OAuth/OIDC providers list.
-- Observability stack.
-- Deployment target.
+| Decision | Needed by | Notes |
+| --- | --- | --- |
+| ORM: Drizzle vs Prisma | Foundation (before migrations) | Drizzle + `postgres` driver are already installed; record why |
+| API route prefix and versioning | M1 contract | Frontend calls `/auth/*` but `/api/<module>/*` elsewhere |
+| Error envelope and error-code format | M1 contract | Shape the error handler returns; codes used in every contract |
+| Cookie strategy and CSRF approach | M1 | |
+| Refresh token rotation policy | M1 | Lifetimes, family revocation, reuse detection |
+| OAuth/OIDC providers and account linking | M1 | Google + GitHub; link by verified email only |
+| Caching strategy | M6 | In-memory vs Redis vs HTTP cache |
+| Queue technology | M4 | BullMQ vs alternatives |
+| WebSocket library | M5 | `@fastify/websocket` vs Socket.io; frontend uses a plain `WebSocket` |
+| Observability stack | M10 | |
+| Secret store and rotation | M12 | See Architecture §13 |
+| Deployment target | M12 | |

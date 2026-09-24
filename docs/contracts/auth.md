@@ -6,7 +6,7 @@
 
 ## Status
 
-- Phase A status: Not started.
+- Phase A status: Not started. DTOs and routes already exist in code (see below).
 - Last updated: TBD.
 - Owners: backend, frontend.
 
@@ -19,6 +19,31 @@
 ## Scope (high level)
 
 Authentication, session management, refresh token rotation, password reset, email verification, optional TOTP 2FA, and client-side OAuth 2.0 / OIDC social login (Google and GitHub). The contract must cover every endpoint the frontend calls plus every cookie the backend sets.
+
+## Starting Point (already in code)
+
+Extract the contract from these sources instead of designing from scratch ([why](../project-roadmap.md#how-this-project-deviates)):
+
+- DTOs: [`packages/types/src/auth.ts`](../../packages/types/src/auth.ts)
+- Routes: `real*` object in [`apps/web/src/lib/api/auth.ts`](../../apps/web/src/lib/api/auth.ts)
+
+Routes the frontend calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
+
+- `POST /auth/login`
+- `POST /auth/register`
+- `POST /auth/logout`
+- `GET /auth/me`
+- `PATCH /auth/me`
+- `POST /auth/refresh`
+- `GET /auth/linked-accounts`
+- `POST /auth/linked-accounts/:provider`
+- `DELETE /auth/linked-accounts/:provider`
+- `GET /auth/oauth/:provider/start?returnTo=` (full-page redirect; the backend then redirects to the frontend `/auth/callback/[provider]`)
+
+Known gaps to resolve before freezing:
+
+- [ ] Prefix: auth has no `/api` prefix, unlike every other module. Decide in the route-prefix ADR, then align.
+- [ ] The frontend doesn't call verify-email, forgot/reset password, TOTP, or logout-all yet. Add them to the contract before the matching frontend work.
 
 ## To Fill in Phase A
 

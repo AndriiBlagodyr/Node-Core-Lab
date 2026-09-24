@@ -56,30 +56,38 @@ Repo root also has `docker-compose.yml` so `pnpm`/`docker compose up` works from
 | requestId + AsyncLocalStorage | `plugins/request-id.ts` + `lib/request-context.ts` | Same idea as lab 06 |
 | Health / readiness / liveness | `routes/health.ts` | live = process up; ready = DB (+ Redis) reachable |
 | Docker Compose | `docker-compose.yml` (root + `apps/api`) | Postgres `5432`, Redis `6379`, MailHog `1025`/`8025` |
-| Migrations | `infrastructure/db/*`, `drizzle.config.ts` | Write ADR: Drizzle vs Prisma first |
+| Migrations | `infrastructure/db/*`, `drizzle.config.ts` | Write ADR 0002 first (Drizzle is already installed) |
 | Seeds + test DB | `infrastructure/db/seed.ts`, `.env` / Compose overrides | Separate `DATABASE_URL` for tests later |
 | OpenAPI | `plugins/swagger.ts` | From route schemas; serve `/docs` |
 | CLI | `src/cli/index.ts` | `pnpm --filter @app/api cli migrate` etc. |
+| Tests + CI | `vitest.config.ts`, `test/*.test.ts`, `.github/workflows/ci.yml` | `inject()` tests; no port binding |
 
-## Suggested fill-in order
+## Fill-in order and status
 
-1. `config/env.ts` + expand `.env.example` / `docs/env.md`
-2. `domain/errors.ts` + `lib/request-context.ts`
-3. `app.ts` + `server.ts` (boot without DB)
-4. `plugins/request-id.ts` + `plugins/error-handler.ts`
-5. `routes/health.ts` (liveness first; readiness after DB)
-6. Compose + `infrastructure/db/*` + migrations
-7. Redis + mail stubs (connect only; no product use yet)
-8. Swagger + CLI
+Each step should leave `pnpm --filter @app/api dev` in a runnable state. Update the status column as you merge.
+
+| # | Step | Files | Status |
+| - | --- | --- | --- |
+| 1 | Env validation | `config/env.ts`, `.env.example`, [env.md](./env.md) | ✅ Done |
+| 2 | Errors + request context | `domain/errors.ts`, `lib/request-context.ts`, `lib/result.ts` | 🟡 `AppError` base, ALS, and `Result` done; error subclasses TODO |
+| 3 | Boot without DB | `app.ts`, `server.ts` (listen + SIGINT/SIGTERM, like lab 12) | ⬜ |
+| 4 | Core plugins | `plugins/request-id.ts`, `plugins/error-handler.ts` | ⬜ |
+| 5 | Probes | `routes/index.ts`, `routes/health.ts` (`/live` first; `/ready` after DB) | ⬜ |
+| 6 | Test harness + CI | Vitest, `app.inject()` test for `/live`, `.github/workflows/ci.yml` | ⬜ |
+| 7 | Database | ADR 0002 (ORM), `drizzle.config.ts`, `infrastructure/db/*`, first migration | ⬜ (Compose ✅) |
+| 8 | Redis + mail | `infrastructure/redis/client.ts`, `infrastructure/mail/client.ts` (connect only) | ⬜ |
+| 9 | Swagger + CLI | `plugins/swagger.ts` (`/docs`), `cli/index.ts` (`migrate`, `seed`) | ⬜ |
+
+Foundation is done when `/live`, `/ready`, and `/docs` respond, CI is green, and `pnpm --filter @app/api db:migrate` works against Compose.
 
 ## Out of scope for Foundation
 
 - Auth, Search, Files, Jobs, Chat routes
 - Full DI container (Architecture roadmap — wire gradually)
-- Production deployment / CI (later modules)
+- Production deployment, Docker images, release workflow (M12). A minimal lint/typecheck/test CI *is* in scope.
 
 ## Related docs
 
 - [Backend Roadmap — Foundation](./backend-roadmap.md#foundation)
 - [Architecture Roadmap](./architecture-roadmap.md) — layering, errors, env, ADRs
-- [Project Roadmap — Milestone 1](./project-roadmap.md)
+- [Project Roadmap — Stage Map](./project-roadmap.md#stage-map)
