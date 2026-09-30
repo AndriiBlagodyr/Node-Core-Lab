@@ -1,20 +1,11 @@
 # Contract: Real-time Chat & WebSockets
 
-> Stub. Fill this contract during Phase A of the Chat module before any
-> frontend or backend work begins. Use [`_template.md`](./_template.md) as the
-> canonical structure.
+> Stub. Freeze this contract in step 1 of [Module 4](../roadmap.md#module-4-chat) before writing routes. Use [`_template.md`](./_template.md) for the final structure.
 
 ## Status
 
-- Phase A status: Not started. DTOs and routes already exist in code (see below).
+- Status: Not started. DTOs and routes already exist in code (see below).
 - Last updated: TBD.
-- Owners: backend, frontend.
-
-## Linked Documents
-
-- Backend module: [`backend-roadmap.md` → Module 5: Real-time Chat & WebSockets](../backend-roadmap.md#module-5-real-time-chat--websockets).
-- Frontend module: [`frontend-roadmap.md` → Module 5: Real-time Chat & WebSockets](../frontend-roadmap.md#module-5-real-time-chat--websockets).
-- Shared types: `packages/types/src/chat.ts`.
 
 ## Scope (high level)
 
@@ -22,24 +13,22 @@ Direct messages and group conversations, presence, typing indicators, read recei
 
 ## Starting Point (already in code)
 
-Extract the contract from these sources instead of designing from scratch ([why](../project-roadmap.md#how-this-project-deviates)):
-
 - DTOs: [`packages/types/src/chat.ts`](../../packages/types/src/chat.ts)
 - Routes: `real*` object in [`apps/web/src/lib/api/chat.ts`](../../apps/web/src/lib/api/chat.ts)
 
-Routes the frontend calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
+Routes the client calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
 
 - `GET /api/chat/conversations`
 - `GET /api/chat/conversations/:id/messages?cursor=`
 - `GET /api/chat/contacts`
-- `WS /api/chat/ws (plain WebSocket, JSON `ChatInboundEvent` / `ChatOutboundEvent`)`
+- `WS /api/chat/ws` (plain WebSocket, JSON `ChatInboundEvent` / `ChatOutboundEvent`)
 
-Known gaps to resolve before freezing:
+## Open Questions
 
-- [ ] No REST send-message or mark-read endpoints are called; the backend roadmap lists both as fallbacks.
-- [ ] Socket auth: a browser `WebSocket` can't send an `Authorization` header. Choose cookie or short-lived query token.
+- [ ] No REST send-message or mark-read endpoints are called; sending happens only over the WebSocket. Confirm that, or add a REST fallback.
+- [ ] Socket auth: a browser `WebSocket` can't send an `Authorization` header. Module 4 plans cookie auth on upgrade; confirm it.
 
-## To Fill in Phase A
+## To Fill
 
 - [ ] Overview.
 - [ ] Domain model: `Conversation`, `Participant`, `Message`, `ReadReceipt`, `Presence`.

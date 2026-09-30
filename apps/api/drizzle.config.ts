@@ -9,7 +9,7 @@
  *
  * If you choose Prisma instead, replace this with prisma/schema.prisma and remove Drizzle deps.
  *
- * @see docs/foundation.md
+ * @see docs/roadmap.md#1-foundation
  */
 
 // TODO(foundation): export default defineConfig({ ... }) from "drizzle-kit"

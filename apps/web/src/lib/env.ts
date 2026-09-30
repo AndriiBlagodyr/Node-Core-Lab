@@ -1,6 +1,6 @@
 /**
  * Frontend env. Validated at module-load so misconfig fails fast in the
- * browser console — same idea as `env.ts` in the backend roadmap.
+ * browser console — same idea as `apps/api/src/config/env.ts`.
  *
  * Only `NEXT_PUBLIC_*` values are reachable here.
  */

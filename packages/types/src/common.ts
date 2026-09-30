@@ -1,6 +1,6 @@
 /**
  * Shared response envelope and error contract.
- * Mirrors the API design rules in `docs/architecture-roadmap.md`:
+ * Mirrors the API rules in `docs/roadmap.md` → Foundation:
  *   { data, error, meta }
  *
  * The frontend always reads `data` on success and `error` on failure, so the

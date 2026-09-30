@@ -145,7 +145,7 @@ export default function JobsDashboardPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Module 4 · Background Jobs & Workers"
+        eyebrow="Module 3 · Background Jobs & Workers"
         title="Jobs dashboard"
         description="Live progress via SSE (mock simulates ticks every 800ms). Retry and cancel are wired to the same endpoints the BullMQ worker will own."
         actions={

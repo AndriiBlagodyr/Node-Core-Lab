@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SkeletonRows } from "@/components/ui/States";
-import { SocialButtons } from "../components/SocialButtons";
 import styles from "../auth.module.css";
 
 const schema = z.object({
@@ -118,12 +117,6 @@ function LoginForm() {
             Sign in
           </Button>
         </form>
-
-        <div className={styles.divider}>
-          <span>or continue with</span>
-        </div>
-
-        <SocialButtons mode="signin" returnTo={next} />
 
         <div className={styles.altRow}>
           <span>New here?</span>

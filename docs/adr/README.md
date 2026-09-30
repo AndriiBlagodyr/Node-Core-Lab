@@ -8,7 +8,7 @@ This folder records every non-trivial architecture decision made in Node Core La
 2. Copy [`_template.md`](./_template.md) to `NNNN-short-kebab-title.md`.
 3. Set status to `Proposed` while drafting. Move to `Accepted` once the decision is made.
 4. Add a row to the index below. Keep the table sorted by number.
-5. Reference the ADR from the relevant module roadmap or contract file.
+5. Reference the ADR from the relevant contract or the roadmap.
 
 ## Numbering and Lifecycle Rules
 
@@ -23,21 +23,15 @@ This folder records every non-trivial architecture decision made in Node Core La
 | ------ | ----- | ------ | ---- |
 | [0001](./0001-record-architecture-decisions.md) | Record Architecture Decisions | Accepted | 2026-05-02 |
 
-## Backlog
+## Backl## Backlog
 
-Decisions the roadmaps need, in the order the [Stage Map](../project-roadmap.md#stage-map) reaches them. Take the next free number when you start one.
+Decisions the [roadmap](../roadmap.md) needs, in order. Take the next free number when you start one.
 
 | Decision | Needed by | Notes |
 | --- | --- | --- |
 | ORM: Drizzle vs Prisma | Foundation (before migrations) | Drizzle + `postgres` driver are already installed; record why |
-| API route prefix and versioning | M1 contract | Frontend calls `/auth/*` but `/api/<module>/*` elsewhere |
-| Error envelope and error-code format | M1 contract | Shape the error handler returns; codes used in every contract |
-| Cookie strategy and CSRF approach | M1 | |
-| Refresh token rotation policy | M1 | Lifetimes, family revocation, reuse detection |
-| OAuth/OIDC providers and account linking | M1 | Google + GitHub; link by verified email only |
-| Caching strategy | M6 | In-memory vs Redis vs HTTP cache |
-| Queue technology | M4 | BullMQ vs alternatives |
-| WebSocket library | M5 | `@fastify/websocket` vs Socket.io; frontend uses a plain `WebSocket` |
-| Observability stack | M10 | |
-| Secret store and rotation | M12 | See Architecture §13 |
-| Deployment target | M12 | |
+| Route prefix and error envelope | Module 1 contract | Client calls `/auth/*` but `/api/<module>/*` elsewhere |
+| Session design: cookies, CSRF, refresh rotation | Module 1 | Lifetimes, family revocation, reuse detection |
+| Caching strategy | Module 2 | Redis cache-aside vs HTTP caching; invalidation rules |
+| Queue technology | Module 3 | BullMQ vs alternatives |
+| WebSocket library | Module 4 | `@fastify/websocket` vs Socket.io; the client uses a plain `WebSocket` |

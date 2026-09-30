@@ -1,42 +1,21 @@
 # `@app/web`
 
-Next.js (App Router) frontend for Node Core Lab. Implements every page from the [Frontend Roadmap](../../docs/frontend-roadmap.md) using mock adapters that mirror the contracts in [`docs/contracts/`](../../docs/contracts).
+A Next.js **test client** for the backend. It isn't a learning track: change it only when a backend module needs a small fix to be exercised (see [docs/roadmap.md](../../docs/roadmap.md)).
 
-## Module → folder map
+| Module | Folder |
+| --- | --- |
+| Shell | `src/app/layout.tsx`, `src/components/shell/*` |
+| 1 Auth | `src/app/auth/*` (login, register, profile) |
+| 2 Search | `src/app/search/*` |
+| 3 Jobs | `src/app/jobs/*` (list, new, live SSE details) |
+| 4 Chat | `src/app/chat/*` |
 
-| Module | Folder | Notes |
-| --- | --- | --- |
-| Shell | `src/app/layout.tsx`, `src/components/shell/*` | Sidebar, topbar, providers |
-| Auth | `src/app/auth/*` | Login, register, profile, OAuth callback |
-| Search | `src/app/search/*` | Dashboard table + item details |
-| Files | `src/app/files/*` | Library, chunked uploader, details, video player |
-| Jobs | `src/app/jobs/*` | Dashboard, new job form, live SSE details |
-| Chat | `src/app/chat/*` | Sidebar layout + conversation view |
+## Mock vs real
 
-## API adapter pattern
+Each module has an adapter at `src/lib/api/<module>.ts` with a `mock*` and a `real*` implementation behind one interface. Set `NEXT_PUBLIC_API_MODE=real` in `.env.local` (and restart) to call the API at `NEXT_PUBLIC_API_BASE_URL`.
 
-Every module has an adapter at `src/lib/api/<module>.ts` exporting a single typed object with both a `real*` and `mock*` implementation:
-
-```ts
-export const authApi: AuthApi = env.apiMode === "mock" ? mockAuth : realAuth;
-```
-
-Switch with `NEXT_PUBLIC_API_MODE=real` in `.env.local`.
-
-## Stack
-
-- Next.js 15 + React 18 (App Router)
-- CSS Modules + design tokens (no Tailwind)
-- TanStack Query for data fetching, polling, infinite scroll
-- React Hook Form + Zod for form validation
-- `@repo/types` — shared DTOs with the future backend
-
-## Development
+## Run
 
 ```bash
-pnpm install
-pnpm dev         # http://localhost:7100
-pnpm typecheck
-pnpm lint
-pnpm build
+pnpm --filter @app/web dev        # http://localhost:7100
 ```

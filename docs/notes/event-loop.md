@@ -1,6 +1,6 @@
 # Event Loop Notes (Lab 01)
 
-Reference note for [Node.js Fundamentals → §1 Event Loop & Timers](../node-fundamentals-roadmap.md#1-event-loop--timers). The per-experiment "expected / happened / why" notes live in the lab script itself.
+Reference note for [Node.js Fundamentals → §1 Event Loop & Timers](../../apps/api/labs/README.md#1-event-loop--timers). The per-experiment "expected / happened / why" notes live in the lab script itself.
 
 Lab script: [`apps/api/labs/01-event-loop.ts`](../../apps/api/labs/01-event-loop.ts)
 

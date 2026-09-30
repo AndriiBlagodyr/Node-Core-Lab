@@ -1,20 +1,11 @@
 # Contract: Database Performance & Search
 
-> Stub. Fill this contract during Phase A of the Search module before any
-> frontend or backend work begins. Use [`_template.md`](./_template.md) as the
-> canonical structure.
+> Stub. Freeze this contract in step 1 of [Module 2](../roadmap.md#module-2-search) before writing routes. Use [`_template.md`](./_template.md) for the final structure.
 
 ## Status
 
-- Phase A status: Not started. DTOs and routes already exist in code (see below).
+- Status: Not started. DTOs and routes already exist in code (see below).
 - Last updated: TBD.
-- Owners: backend, frontend.
-
-## Linked Documents
-
-- Backend module: [`backend-roadmap.md` → Module 2: Database Performance & Search](../backend-roadmap.md#module-2-database-performance--search).
-- Frontend module: [`frontend-roadmap.md` → Module 2: High-Performance Search](../frontend-roadmap.md#module-2-high-performance-search).
-- Shared types: `packages/types/src/search.ts`.
 
 ## Scope (high level)
 
@@ -22,22 +13,20 @@ Searchable list endpoint with filtering, sorting, full-text search, and cursor p
 
 ## Starting Point (already in code)
 
-Extract the contract from these sources instead of designing from scratch ([why](../project-roadmap.md#how-this-project-deviates)):
-
 - DTOs: [`packages/types/src/search.ts`](../../packages/types/src/search.ts)
 - Routes: `real*` object in [`apps/web/src/lib/api/search.ts`](../../apps/web/src/lib/api/search.ts)
 
-Routes the frontend calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
+Routes the client calls today (relative to `NEXT_PUBLIC_API_BASE_URL`):
 
-- `POST /api/items/search (body: filters, sort, cursor, limit)`
+- `POST /api/items/search` (body: filters, sort, cursor, limit)
 - `GET /api/items/:id`
 
-Known gaps to resolve before freezing:
+## Open Questions
 
-- [ ] Search is `POST` with a JSON body, not `GET` with query params. Keep it (complex filters) or switch (cacheable, shareable URLs); this affects M6 HTTP caching.
-- [ ] The backend roadmap also wants an offset-paginated variant for comparison. Decide whether it is public API or a benchmark-only route.
+- [ ] Search is `POST` with a JSON body, not `GET` with query params. Keep it (complex filters) or switch (cacheable, shareable URLs); this affects HTTP caching in Module 2.
+- [ ] The Module 2 drill needs an `OFFSET` variant for comparison. Decide whether it is a query flag or a benchmark-only route.
 
-## To Fill in Phase A
+## To Fill
 
 - [ ] Overview.
 - [ ] Domain model: searchable entity, tags or categories.

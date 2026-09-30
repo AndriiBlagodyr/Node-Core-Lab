@@ -14,7 +14,6 @@ Every variable either app reads. Keep this file in sync with each app's `.env.ex
 | `LOG_LEVEL` | no* | `info` | Pino level: `fatal` \| `error` \| `warn` \| `info` \| `debug` \| `trace` \| `silent` |
 | `DATABASE_URL` | yes | — | PostgreSQL connection string |
 | `REDIS_URL` | yes | — | Redis connection string |
-| `SMTP_URL` | yes | — | SMTP URL (MailHog in local Compose) |
 
 \* Defaults apply when the variable is unset. Values in `.env.example` match these defaults for local Compose.
 
@@ -24,8 +23,6 @@ Every variable either app reads. Keep this file in sync with each app's `.env.ex
 | --- | --- |
 | Postgres | `5432` |
 | Redis | `6379` |
-| MailHog SMTP | `1025` |
-| MailHog UI | `8025` |
 
 Start infra: `docker compose up -d` from the repo root.
 
@@ -44,7 +41,6 @@ Add rows here when the variable is introduced, not before.
 
 | Variable | Stage | Purpose |
 | --- | --- | --- |
-| `TEST_DATABASE_URL` or `NODE_ENV=test` override | Foundation step 6 | Separate DB for integration tests |
-| `CORS_ORIGIN` | M1 | Must match the web origin (`http://localhost:7100`) for credentialed requests |
-| `JWT_*` signing keys, `COOKIE_SECRET` | M1 | Classified *high* in Architecture §13 |
-| `GOOGLE_*`, `GITHUB_*` OAuth client id/secret | M1 | |
+| `NODE_ENV=test` override or `TEST_DATABASE_URL` | Foundation | Separate DB for integration tests (Testcontainers may make this unnecessary) |
+| `CORS_ORIGIN` | Module 1 | Must match the web origin (`http://localhost:7100`) for credentialed requests |
+| `JWT_SECRET` (or key pair), `COOKIE_SECRET` | Module 1 | Never commit real values |

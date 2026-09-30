@@ -1,6 +1,5 @@
-# Local infra for Backend Foundation (Postgres, Redis, MailHog).
+# Local infra for the API (Postgres, Redis).
 # From repo root: docker compose up -d
-# Same file mirrored under apps/api for convenience.
 
 services:
   postgres:
@@ -34,14 +33,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
-
-  mailhog:
-    image: mailhog/mailhog:v1.0.1
-    container_name: node-core-lab-mailhog
-    restart: unless-stopped
-    ports:
-      - "1025:1025" # SMTP
-      - "8025:8025" # Web UI
 
 volumes:
   node_core_lab_pg:
