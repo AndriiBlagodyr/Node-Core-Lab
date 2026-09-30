@@ -1,9 +1,7 @@
 import type {
-  LinkedAccount,
   LoginRequest,
   RegisterRequest,
   Session,
-  SocialProvider,
   UpdateProfileRequest,
   User,
 } from "@repo/types";
@@ -15,7 +13,7 @@ import { readMockUser, writeMockUser } from "@/lib/mocks/store";
 /**
  * Auth API surface. Both adapters expose the same methods so swapping the
  * `NEXT_PUBLIC_API_MODE` env flag is the only change required when the
- * Fastify backend ships in Module 1 (Backend Roadmap).
+ * Fastify backend ships in Module 1 (docs/roadmap.md).
  */
 export interface AuthApi {
   login: (input: LoginRequest) => Promise<Session>;
@@ -24,13 +22,6 @@ export interface AuthApi {
   getProfile: () => Promise<User>;
   updateProfile: (input: UpdateProfileRequest) => Promise<User>;
   refreshSession: () => Promise<Session>;
-  getOAuthAuthorizeUrl: (
-    provider: SocialProvider,
-    returnTo: string
-  ) => string;
-  getLinkedAccounts: () => Promise<LinkedAccount[]>;
-  linkSocialAccount: (provider: SocialProvider) => Promise<void>;
-  unlinkSocialAccount: (provider: SocialProvider) => Promise<void>;
 }
 
 /** Real adapter — points at the future Fastify backend. */
@@ -44,19 +35,7 @@ const realAuth: AuthApi = {
   updateProfile: (input) =>
     http<User>("/auth/me", { method: "PATCH", body: input }),
   refreshSession: () => http<Session>("/auth/refresh", { method: "POST" }),
-  getOAuthAuthorizeUrl: (provider, returnTo) =>
-    `${env.apiBaseUrl}/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(
-      returnTo
-    )}`,
-  getLinkedAccounts: () => http<LinkedAccount[]>("/auth/linked-accounts"),
-  linkSocialAccount: (provider) =>
-    http(`/auth/linked-accounts/${provider}`, { method: "POST" }),
-  unlinkSocialAccount: (provider) =>
-    http(`/auth/linked-accounts/${provider}`, { method: "DELETE" }),
 };
-
-/** In-memory mock state. Survives across imports during dev. */
-const linkedAccountsState: LinkedAccount[] = [];
 
 function buildSession(user: User): Session {
   return {
@@ -94,8 +73,6 @@ const mockAuth: AuthApi = {
       id: "u_demo",
       email: input.email,
       name: input.email.split("@")[0] ?? "Demo User",
-      emailVerified: true,
-      twoFactorEnabled: false,
       createdAt: new Date().toISOString(),
     };
     writeMockUser({ id: user.id, email: user.email, name: user.name });
@@ -112,8 +89,6 @@ const mockAuth: AuthApi = {
       id: "u_demo",
       email: input.email,
       name: input.name,
-      emailVerified: false,
-      twoFactorEnabled: false,
       createdAt: new Date().toISOString(),
     };
     writeMockUser({ id: user.id, email: user.email, name: user.name });
@@ -131,8 +106,6 @@ const mockAuth: AuthApi = {
       id: u.id,
       email: u.email,
       name: u.name,
-      emailVerified: true,
-      twoFactorEnabled: false,
       createdAt: new Date(Date.now() - 86_400_000).toISOString(),
     };
   },
@@ -146,8 +119,6 @@ const mockAuth: AuthApi = {
       id: next.id,
       email: next.email,
       name: next.name,
-      emailVerified: true,
-      twoFactorEnabled: false,
       createdAt: new Date().toISOString(),
     };
   },
@@ -159,34 +130,8 @@ const mockAuth: AuthApi = {
       id: u.id,
       email: u.email,
       name: u.name,
-      emailVerified: true,
-      twoFactorEnabled: false,
       createdAt: new Date().toISOString(),
     });
-  },
-  getOAuthAuthorizeUrl(provider, returnTo) {
-    return `/auth/callback/${provider}?mock=1&returnTo=${encodeURIComponent(
-      returnTo
-    )}`;
-  },
-  async getLinkedAccounts() {
-    await delay(160);
-    return linkedAccountsState.slice();
-  },
-  async linkSocialAccount(provider) {
-    await delay(220);
-    if (!linkedAccountsState.find((a) => a.provider === provider)) {
-      linkedAccountsState.push({
-        provider,
-        providerEmail: `you@${provider}.com`,
-        linkedAt: new Date().toISOString(),
-      });
-    }
-  },
-  async unlinkSocialAccount(provider) {
-    await delay(180);
-    const idx = linkedAccountsState.findIndex((a) => a.provider === provider);
-    if (idx >= 0) linkedAccountsState.splice(idx, 1);
   },
 };
 

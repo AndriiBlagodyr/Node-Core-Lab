@@ -101,7 +101,7 @@ export default function JobDetailsPage() {
   return (
     <>
       <PageHeader
-        eyebrow={`Module 4 · Job ${id}`}
+        eyebrow={`Module 3 · Job ${id}`}
         title={jobQuery.data?.type ?? "Loading…"}
         description="Live updates use SSE in production. The mock dispatches synthetic events on a timer."
         actions={

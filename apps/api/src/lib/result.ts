@@ -1,7 +1,7 @@
 /**
  * Architecture: optional Result/Either for the service layer.
  *
- * IMPLEMENT when you decide throw vs Result (see architecture roadmap §4).
+ * IMPLEMENT when you decide throw vs Result (see docs/roadmap.md → Foundation).
  * Foundation can start by throwing AppError only.
  */
 

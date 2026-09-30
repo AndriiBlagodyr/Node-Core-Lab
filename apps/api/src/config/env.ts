@@ -1,8 +1,8 @@
 /**
  * Foundation: Zod env validation — fail fast before any side effects.
  *
- * @see docs/foundation.md
- * @see docs/architecture-roadmap.md §9 Configuration & Secrets
+ * @see docs/roadmap.md#1-foundation
+ * @see docs/env.md
  */
 
 import { config as loadDotenv } from "dotenv";
@@ -33,7 +33,6 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(logLevels).default("info"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   REDIS_URL: z.string().min(1, "REDIS_URL is required"),
-  SMTP_URL: z.string().min(1, "SMTP_URL is required"),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,20 +1,19 @@
 # Contract: <Module Name>
 
 > Canonical template for a per-module API contract. Copy this file into a new
-> `docs/contracts/<module>.md` during Phase A of the module and fill every section.
+> `docs/contracts/<module>.md` in step 1 of the module and fill every section.
 > Both frontend and backend reference this file as the single source of truth for
 > the module API.
 
 ## Status
 
-- Phase A status: Draft / In review / Frozen.
+- Status: Draft / In review / Frozen.
 - Last updated: YYYY-MM-DD.
 - Owners: backend, frontend.
 
 ## Linked Documents
 
-- Backend roadmap section: [docs/backend-roadmap.md](../backend-roadmap.md).
-- Frontend roadmap section: [docs/frontend-roadmap.md](../frontend-roadmap.md).
+- Roadmap module: [docs/roadmap.md](../roadmap.md).
 - Shared types: `packages/types/src/<module>.ts`.
 
 ## Overview
@@ -118,7 +117,7 @@ Module-specific security considerations. Examples: which endpoints are CSRF-sens
 
 ## Open Questions
 
-Track open questions during Phase A. Resolve all of them before marking the contract Frozen.
+Track open questions while drafting. Resolve all of them before marking the contract Frozen.
 
 - [ ] Question 1.
 - [ ] Question 2.

@@ -37,4 +37,4 @@ Reversibility: high. The pattern is markdown-only and can be abandoned at any ti
 
 - Michael Nygard, "Documenting Architecture Decisions", 2011.
 - [`docs/adr/_template.md`](./_template.md).
-- [`docs/architecture-roadmap.md`](../architecture-roadmap.md).
+- [`docs/roadmap.md`](../roadmap.md).

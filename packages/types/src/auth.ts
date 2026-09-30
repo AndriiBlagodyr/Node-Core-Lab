@@ -6,8 +6,6 @@ export interface User {
   id: UserId;
   email: string;
   name: string;
-  emailVerified: boolean;
-  twoFactorEnabled: boolean;
   avatarUrl?: string;
   createdAt: Iso8601;
 }
@@ -27,8 +25,6 @@ export interface Session {
 export interface LoginRequest {
   email: string;
   password: string;
-  /** Optional TOTP code if 2FA is enabled. */
-  totpCode?: string;
 }
 
 export interface RegisterRequest {
@@ -40,12 +36,4 @@ export interface RegisterRequest {
 export interface UpdateProfileRequest {
   name?: string;
   avatarUrl?: string;
-}
-
-export type SocialProvider = "google" | "github";
-
-export interface LinkedAccount {
-  provider: SocialProvider;
-  providerEmail: string;
-  linkedAt: Iso8601;
 }

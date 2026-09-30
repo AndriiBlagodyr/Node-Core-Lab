@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
  * never touch this; they construct responses in-process. We keep both
  * surfaces in lockstep so swapping is just `NEXT_PUBLIC_API_MODE=real`.
  *
- * Notes for the backend roadmap:
+ * Notes for the backend (docs/roadmap.md):
  *  - `credentials: "include"` is required for HttpOnly refresh-token cookies.
  *  - 401s should bubble up; the AuthProvider handles silent refresh + retry.
  *  - We do NOT store access tokens here. The backend sets them as

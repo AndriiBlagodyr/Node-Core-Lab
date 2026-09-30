@@ -6,7 +6,7 @@ export default function ChatRootLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <PageHeader
-        eyebrow="Module 5 · Real-time Chat & WebSockets"
+        eyebrow="Module 4 · Real-time Chat & WebSockets"
         title="Chat"
         description="Direct messages with presence, typing, and optimistic sends. The mock adapter wires a fake WebSocket bus so the same UI works against the real ws server later."
       />

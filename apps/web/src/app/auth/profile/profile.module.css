@@ -40,36 +40,3 @@
   flex-direction: column;
   gap: var(--space-3);
 }
-
-.linkList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.linkRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-elev-2);
-}
-
-.linkProvider {
-  text-transform: capitalize;
-  font-weight: var(--fw-medium);
-}
-
-.linkedInfo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-.linkedEmail {
-  color: var(--color-text-muted);
-  font-size: var(--fs-sm);
-}

@@ -26,21 +26,15 @@ const NAV: NavItem[] = [
     contract: "search.md",
   },
   {
-    href: "/files",
-    label: "Files",
-    module: "Module 3",
-    contract: "files.md",
-  },
-  {
     href: "/jobs",
     label: "Jobs",
-    module: "Module 4",
+    module: "Module 3",
     contract: "jobs.md",
   },
   {
     href: "/chat",
     label: "Chat",
-    module: "Module 5",
+    module: "Module 4",
     contract: "chat.md",
   },
 ];
@@ -56,7 +50,7 @@ export function Sidebar() {
         </span>
         <div>
           <div className={styles.brandTitle}>Node Core Lab</div>
-          <div className={styles.brandSubtitle}>Frontend → Backend roadmap</div>
+          <div className={styles.brandSubtitle}>Backend test client</div>
         </div>
       </div>
 

@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SkeletonRows } from "@/components/ui/States";
-import { SocialButtons } from "../components/SocialButtons";
 import styles from "../auth.module.css";
 
 const schema = z
@@ -73,10 +72,7 @@ function RegisterForm() {
       authApi.register({ name: v.name, email: v.email, password: v.password }),
     onSuccess: (session) => {
       setSession(session);
-      toast.success(
-        "Account created",
-        "Verify your email to unlock 2FA and account-level operations."
-      );
+      toast.success("Account created");
       router.replace(next);
     },
     onError: (err) => {
@@ -149,12 +145,6 @@ function RegisterForm() {
             Create account
           </Button>
         </form>
-
-        <div className={styles.divider}>
-          <span>or continue with</span>
-        </div>
-
-        <SocialButtons mode="signup" returnTo={next} />
 
         <div className={styles.altRow}>
           <span>Already have an account?</span>

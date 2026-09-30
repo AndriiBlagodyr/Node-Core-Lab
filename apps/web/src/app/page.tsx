@@ -20,8 +20,8 @@ const MODULES: Module[] = [
     title: "Auth & Security",
     href: "/auth/login",
     contract: "docs/contracts/auth.md",
-    beTrack: "Backend Roadmap → Module 1",
-    pages: ["Login", "Register", "Profile", "OAuth callback"],
+    beTrack: "Roadmap → Module 1",
+    pages: ["Login", "Register", "Profile"],
     status: "ready",
   },
   {
@@ -29,34 +29,25 @@ const MODULES: Module[] = [
     title: "High-Performance Search",
     href: "/search",
     contract: "docs/contracts/search.md",
-    beTrack: "Backend Roadmap → Module 2",
+    beTrack: "Roadmap → Module 2",
     pages: ["Dashboard table", "Item details"],
     status: "ready",
   },
   {
     num: "3",
-    title: "File Streaming & Processing",
-    href: "/files",
-    contract: "docs/contracts/files.md",
-    beTrack: "Backend Roadmap → Module 3",
-    pages: ["Library", "Upload", "File details", "Video player"],
-    status: "ready",
-  },
-  {
-    num: "4",
     title: "Background Jobs & Workers",
     href: "/jobs",
     contract: "docs/contracts/jobs.md",
-    beTrack: "Backend Roadmap → Module 4",
+    beTrack: "Roadmap → Module 3",
     pages: ["Dashboard", "Details (SSE)", "Generate report"],
     status: "ready",
   },
   {
-    num: "5",
+    num: "4",
     title: "Real-time Chat & WebSockets",
     href: "/chat",
     contract: "docs/contracts/chat.md",
-    beTrack: "Backend Roadmap → Module 5",
+    beTrack: "Roadmap → Module 4",
     pages: ["Sidebar", "Conversation", "Presence + typing"],
     status: "ready",
   },
@@ -67,8 +58,8 @@ export default function HomePage() {
     <>
       <PageHeader
         eyebrow="Node Core Lab"
-        title="Frontend ready. Backend up to you."
-        description="Each module below has fully working frontend pages backed by mock APIs that mirror the contracts in docs/contracts. Implement the Fastify backend module-by-module per the Node Fundamentals + Backend roadmap, flip NEXT_PUBLIC_API_MODE=real, and the same UI talks to your real service."
+        title="Test client for the backend."
+        description="Each module below has working pages backed by mock APIs that mirror the contracts in docs/contracts. Implement the Fastify module per docs/roadmap.md, set NEXT_PUBLIC_API_MODE=real, and the same pages talk to your service."
       />
 
       <div className={styles.grid}>
@@ -101,32 +92,20 @@ export default function HomePage() {
         ))}
       </div>
 
-      <Card title="Suggested learning order" padded>
+      <Card title="How to use" padded>
         <ol className={styles.steps}>
           <li>
-            Start <code>docs/node-fundamentals-roadmap.md</code> →{" "}
-            <em>Event Loop &amp; Timers</em> labs in <code>apps/api/labs/</code>
-            .
+            Follow <code>docs/roadmap.md</code>: Foundation, then modules 1–4
+            in order.
           </li>
           <li>
-            Build the Fastify <em>Foundation</em> from{" "}
-            <code>docs/backend-roadmap.md</code>: env validation, route schemas,
-            request-id, health/ready/live endpoints.
-          </li>
-          <li>
-            Pick a frontend module above. Read the matching contract stub and
-            fill it in (Phase A). The frontend is already aligned to the
-            shared types in <code>packages/types</code>.
-          </li>
-          <li>
-            Implement the Fastify routes (Phase C). The mock adapter mirrors
-            the URLs the &quot;real&quot; client expects — see{" "}
-            <code>apps/web/src/lib/api/*</code>.
+            Freeze the module&apos;s contract in <code>docs/contracts/</code>,
+            then implement the routes in <code>apps/api</code>.
           </li>
           <li>
             Set <code>NEXT_PUBLIC_API_MODE=real</code> in{" "}
-            <code>apps/web/.env.local</code> to swap mocks for your backend
-            (Phase D).
+            <code>apps/web/.env.local</code> and use these pages to exercise
+            your API.
           </li>
         </ol>
       </Card>

@@ -7,7 +7,7 @@
  *   RateLimitError, DependencyError.
  * - Error handler plugin maps these to HTTP JSON envelopes.
  *
- * @see docs/architecture-roadmap.md §4 Error Handling Strategy
+ * @see docs/roadmap.md#1-foundation
  */
 
 export type AppErrorCode = string;
